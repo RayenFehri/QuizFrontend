@@ -125,7 +125,7 @@ const Home = () => {
                     Statistics
                   </h3>
                   <p className="text-body-tertiary mb-md-7">
-                    Newly found and yet to be solved
+                    How many fruits are on tree
                   </p>
                   <div className="d-flex align-items-center justify-content-between">
                     <p className="mb-0 fw-bold">Scores intervals </p>

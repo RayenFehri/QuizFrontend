@@ -1084,6 +1084,7 @@
     }),
       l && l.setAttribute("placeholder", "Type your message...");
   };
+  
 
   const choicesInit = () => {
     const { getData: e } = window.phoenix.utils;

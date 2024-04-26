@@ -1,6 +1,85 @@
-import React from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { category } from '../../Types/category.type';
+
 
 const CreateQuiz= () => {
+  const [formData, setFormData] = useState({
+    id_category:'',
+    quiztitle: '',
+    material:'',
+    duration:'',
+    deadline:'',
+    noofinvitations:'',
+    difficultylevel:'',
+    noofquestions:'',
+    creator:'yassine',
+
+  });
+  const [categories, setCategories] = useState<category[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<category[]>([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/category/findallCategories');
+      const categoriesData: category[] = response.data.map((item: any) => ({
+        id:item.id,
+        categoryname: item.categoryname,
+        idcategory: item.idcategory,
+      }));
+      setCategories(categoriesData);
+      setFilteredCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const navigate = useNavigate();
+  const [quizzes, setQuizzes] = useState<string[]>([]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'file'){
+      const inputElement = e.target as HTMLInputElement;
+      const file = inputElement.files && inputElement.files[0];
+      if(file){
+          setFormData({...formData, [name]: file });
+      }
+    } else if (name === 'deadline') {
+      // If the input is for deadline, format the date as YYYY-MM-DD
+      const formattedDate = value.split('T')[0]; // Get the date part from the ISO string
+      setFormData({ ...formData, [name]: formattedDate });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('id_category', formData.id_category);
+      formDataToSend.append('difficultylevel', formData.difficultylevel); 
+      formDataToSend.append('deadline', formData.deadline); 
+      formDataToSend.append('creator', formData.creator); 
+
+      const response = await axios.post('http://localhost:3000/quiz/createQuiz', formData);
+      console.log(response.data);
+      navigate('/listquiz');
+      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+    } catch (error) {
+      console.error('Error:', error);
+      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+    }
+  };
+
+
+    
+
     return (
     <>
      
@@ -19,36 +98,47 @@ const CreateQuiz= () => {
   <h2 className="mb-4">Create new Quiz</h2>
   <div className="row">
     <div className="col-xl-9">
-      <form className="row g-3 mb-6">
+      <form className="row g-3 mb-6" onSubmit={handleSubmit}>
         <div className="col-sm-6 col-md-8">
           <div className="form-floating">
             <input
               className="form-control"
               id="floatingInputGrid"
               type="text"
-              placeholder="Project title"
+              placeholder="quiztitle"
+              name="quiztitle"
+              value={formData.quiztitle}
+              onChange={handleChange}
             />
             <label htmlFor="floatingInputGrid">Quiz Title</label>
           </div>
         </div>
+        
         <div className="col-sm-6 col-md-4">
+       
           <div className="form-floating">
-            <select className="form-select" id="floatingSelectTask">
-              <option selected>Select Category</option>
-              <option value={1}>Category One</option>
-              <option value={2}>Category Two</option>
-              <option value={3}>Category Three</option>
+            <select className="form-select" id="floatingSelectTask" value={formData.id_category}
+            onChange={handleChange} name="id_category">
+                <option className='d-none' value="">Select Category</option>
+            {filteredCategories.map((category)=>(
+              <option key={category.idcategory}  value={category.idcategory}>{category.categoryname}</option>
+            ))}
             </select>
+   
             <label htmlFor="floatingSelectTask">Category</label>
           </div>
+            
         </div>
+            
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
-            <select className="form-select" id="floatingSelectPrivacy">
-              <option selected>Select Difficulty Level</option>
-              <option value={1}>Beginner</option>
-              <option value={2}>Intermidiate</option>
-              <option value={3}>Expert</option>
+            <select className="form-select" id="floatingSelectPrivacy" defaultValue="Beginner" name="difficultylevel"
+                    value={formData.difficultylevel}
+                    onChange={handleChange}>
+              <option className='d-none' value="">Select difficulty level</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermidiate">Intermidiate</option>
+              <option value="Expert">Expert</option>
             </select>
             <label htmlFor="floatingSelectPrivacy">Difficulty Level</label>
           </div>
@@ -62,7 +152,10 @@ const CreateQuiz= () => {
               id="floatingProjectOverview"
               placeholder="Leave a comment here"
               style={{ height: 50 }}
-              defaultValue={""}
+              
+              name="noofinvitations"
+              value={formData.noofinvitations}
+              onChange={handleChange}
             />
             <label htmlFor="floatingProjectOverview">Invitations number</label>
           
@@ -76,7 +169,11 @@ const CreateQuiz= () => {
               id="floatingProjectOverview"
               placeholder="Leave a comment here"
               style={{ height: 50 }}
-              defaultValue={""}
+              
+              name="noofquestions"
+              value={formData.noofquestions}
+              onChange={handleChange}
+              
             />
             <label htmlFor="floatingProjectOverview">Questions number</label>
           
@@ -87,8 +184,11 @@ const CreateQuiz= () => {
           <input
               className="form-control"
               id="floatingInputBudget"
-              type="file"
+              type="text"
               placeholder="Budget"
+              name="material"
+              value={formData.material}
+              onChange={handleChange}
             />
             <label htmlFor="floatingInputBudget">Material</label>
           </div>
@@ -100,8 +200,10 @@ const CreateQuiz= () => {
                 className="form-control datetimepicker"
                 id="floatingInputStartDate"
                 type="time"
-                
                 data-options='{"disableMobile":false}'
+                name="duration"
+              value={formData.duration}
+              onChange={handleChange}
               />
               <label className="ps-6" htmlFor="floatingInputStartDate">
                 Duration
@@ -119,7 +221,9 @@ const CreateQuiz= () => {
                 type="date"
                 placeholder="deadline"
                 data-options='{"disableMobile":true}'
-                
+                name="deadline"
+              value={formData.deadline}
+              onChange={handleChange}
               />
               <label className="ps-6" htmlFor="floatingInputDeadline">
                 Deadline
@@ -166,7 +270,7 @@ const CreateQuiz= () => {
               <button className="btn btn-phoenix-primary px-5">Cancel</button>
             </div>
             <div className="col-auto">
-              <button className="btn btn-primary px-5 px-sm-15">
+              <button className="btn btn-primary px-5 px-sm-15 " type="submit">
                 Create Quiz
               </button>
             </div>

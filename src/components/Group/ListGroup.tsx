@@ -1,56 +1,8 @@
 import { faHome , faListAlt , faPlusSquare, faQuestion , faUser ,faUserShield ,faUserPlus, faList, faLayerGroup, faTrash, faTrashAlt, faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {category} from '../../Types/category.type'
-import axios from 'axios';
-import { Link } from 'react-router-dom'
+import React from "react";
+const ListGroup = () => {
 
-const ListCategories = () => {
-  const [categories, setCategories] = useState<category[]>([]);
-  const [filteredCategories, setFilteredCategories] = useState<category[]>([]);
-  const scrollPositionRef = useRef<number>(0); 
-
-  
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/category/findallCategories');
-      const categoriesData: category[] = response.data.map((item: any) => ({
-        id:item.id,
-        categoryname: item.categoryname,
-        idcategory: item.idcategory,
-      }));
-      setCategories(categoriesData);
-      setFilteredCategories(categoriesData);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filter = categories.filter(
-      (cat) => cat.categoryname?.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredCategories(filter);
-  };
-  const handleRemoveCategory = async (idcategory: string) => {
-    try {
-      const response = await axios.delete(`http://localhost:3000/category/deleteCategory/${idcategory}`);
-      if (response.status === 200) {
-        // Remove the category from the list
-        setCategories(categories.filter((cat) => cat.idcategory !== idcategory));
-        setFilteredCategories(filteredCategories.filter((cat) => cat.idcategory !== idcategory));
-        console.log('Category removed successfully!');
-      } else {
-        console.error('Error removing category');
-      }
-    } catch (error) {
-      console.error('Unexpected error removing category:', error);
-    }
-  };
     return (
         <>
 <div className="content col-md-10"> 
@@ -76,14 +28,14 @@ const ListCategories = () => {
         <div className="row mb-4 gx-6 gy-3 align-items-center ">
           <div className="col-auto">
             <h2 className="mb-0">
-              Categories
-              <span className="fw-normal text-body-tertiary ms-3">({categories.length})</span>
+              Groupes
+              <span className="fw-normal text-body-tertiary ms-3">(32)</span>
             </h2>
           </div>
           <div className="col-auto ">
-            <a className="btn btn-primary px-5" href="/createcategory">
+            <a className="btn btn-primary px-5" href="/createquiz">
               <i className="fa-solid fa-plus me-2" />
-              Create new Category
+              Create new Group
             </a>
           </div>
         </div>
@@ -100,7 +52,7 @@ const ListCategories = () => {
                   href="#"
                 >
                   <span>All</span>
-                  <span className="text-body-tertiary fw-semibold">({categories.length})</span>
+                  <span className="text-body-tertiary fw-semibold">(32)</span>
                 </a>
               </li>
             </ul>
@@ -113,15 +65,12 @@ const ListCategories = () => {
                   className="position-relative"
                   data-bs-toggle="search"
                   data-bs-display="static"
-
                 >
                   <input
                     className="form-control search-input search"
                     type="search"
-                    placeholder="Search category"
+                    placeholder="Search group"
                     aria-label="Search"
-                    onChange={handleChange}
-
                   />
                   <span className="fas fa-search search-box-icon" />
                 </form>
@@ -236,8 +185,61 @@ const ListCategories = () => {
                   data-sort="projectName"
                   style={{ width: "30%" }}
                 >
-                  CATEGORY NAME
+                  GROUP NAME
                 </th>
+                {/* <th
+                  className="sort align-middle ps-3"
+                  scope="col"
+                  data-sort="assigness"
+                  style={{ width: "10%" }}
+                >
+                  INVITES
+                </th>
+                <th
+                  className="sort align-middle ps-3"
+                  scope="col"
+                  data-sort="start"
+                  style={{ width: "10%" }}
+                >
+                  START DATE
+                </th>
+                <th
+                  className="sort align-middle ps-3"
+                  scope="col"
+                  data-sort="deadline"
+                  style={{ width: "15%" }}
+                >
+                  DEADLINE
+                </th>
+                <th
+                  className="sort align-middle ps-3"
+                  scope="col"
+                  data-sort="task"
+                  style={{ width: "12%" }}
+                >
+                  TASK
+                </th>
+                <th
+                  className="sort align-middle ps-3"
+                  scope="col"
+                  data-sort="projectprogress"
+                  style={{ width: "5%" }}
+                >
+                  PROGRESS
+                </th>
+                <th
+                  className="sort align-middle text-end"
+                  scope="col"
+                  data-sort="statuses"
+                  style={{ width: "10%" }}
+                >
+                  STATUS
+                </th>
+                <th
+                  className="sort align-middle text-end"
+                  scope="col"
+                  style={{ width: "10%" }}
+                /> */}
                  <th
                   className="sort align-middle text-end"
                   scope="col"
@@ -246,13 +248,13 @@ const ListCategories = () => {
               </tr>
             </thead>
             <tbody className="list " id="project-list-table-body">
-              {filteredCategories.map((category,index)=>
-              <tr key={category.idcategory} className="position-static">
+              <tr className="position-static">
                 <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <a className="fw-bold fs-8" href="#" >{category.categoryname}
-                    
+                  <a className="fw-bold fs-8" href="#">
+                    Web development
                   </a>
                 </td>
+                
                 <td className="align-middle text-end white-space-nowrap pe-0 action">
                   <div className="btn-reveal-trigger position-static">
                     <button
@@ -273,14 +275,14 @@ const ListCategories = () => {
                         
 
                       </a>
-                      <Link className="dropdown-item" to={`/editcategory/${category.idcategory}`}>
+                      <a className="dropdown-item" href="/editgroup">
                       <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
 
                         Edit
 
-                      </Link>
+                      </a>
                       <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" onClick={() => handleRemoveCategory(category.idcategory)}>
+                      <button  id="removeButton" className="dropdown-item text-danger" >
                       <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
 
                         Remove   
@@ -289,8 +291,135 @@ const ListCategories = () => {
                   </div>
                 </td>
               </tr>
-              )}
-              
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Design
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Marketing
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Finance
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
             
             </tbody>
           </table>
@@ -358,4 +487,4 @@ const ListCategories = () => {
 
 }
 
-export default ListCategories;
+export default ListGroup;

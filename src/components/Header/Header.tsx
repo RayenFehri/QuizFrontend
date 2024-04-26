@@ -337,7 +337,7 @@ const Header = () => {
             data-bs-placement="left"
             title="Switch theme"
           >
-            <span className="icon" data-feather="moon" />
+            <span className="fas fa-moon" data-feather="moon" />
           </label>
           <label
             className="mb-0 theme-control-toggle-label theme-control-toggle-dark"
@@ -346,7 +346,7 @@ const Header = () => {
             data-bs-placement="left"
             title="Switch theme"
           >
-            <span className="icon" data-feather="sun" />
+            <span className="fas fa-sun" data-feather="sun" />
           </label>
         </div>
       </li>
@@ -361,7 +361,7 @@ const Header = () => {
           aria-expanded="false"
           data-bs-auto-close="outside"
         >
-          <span data-feather="bell" style={{ height: 20, width: 20 }} />
+          <span className="fas fa-bell" data-feather="bell" style={{ height: 18, width: 18 }} />
         </a>
         <div
           className="dropdown-menu dropdown-menu-end notification-dropdown-menu py-0 shadow border navbar-dropdown-caret"

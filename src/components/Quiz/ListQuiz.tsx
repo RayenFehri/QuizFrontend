@@ -1,7 +1,64 @@
 import { faEdit, faEye, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { quiz } from "../../Types/quiz.type";
+import axios from "axios";
+import { Link } from "react-router-dom";
+
 const Quizes = () => {
+  const [quizzes, setQuizzes] = useState<quiz[]>([]);
+
+  const [filteredQuizzes, setFilteredQuizzes] = useState<quiz[]>([]);
+
+  const scrollPositionRef = useRef<number>(0); 
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/quiz/findallQuizes');
+      const quizzesData: quiz[] = response.data.map((item: any) => ({
+        id_category:item.id_category,
+        idquiz: item.idquiz,
+        quiztitle: item.quiztitle,
+        material : item.material,
+        duration: item.duration,
+        deadline: item.deadline,
+        noofinvitations:item.noofinvitations,
+        difficultylevel: item.difficultylevel,
+        noofquestions: item.noofquestions,
+        creator: item.creator,
+
+      }));
+      setQuizzes(quizzesData);
+      setFilteredQuizzes(quizzesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const filter = quizzes.filter(
+      (quiz) => quiz.quiztitle?.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredQuizzes(filter);
+  };
+  const handleRemoveQuiz = async (idquiz: string) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/quiz/deleteQuiz/${idquiz}`);
+      if (response.status === 200) {
+        // Remove the category from the list
+        setQuizzes(quizzes.filter((quiz) => quiz.idquiz !== idquiz));
+        setFilteredQuizzes(filteredQuizzes.filter((quiz) => quiz.idquiz !== idquiz));
+        console.log('Quiz removed successfully!');
+      } else {
+        console.error('Error removing quiz');
+      }
+    } catch (error) {
+      console.error('Unexpected error removing quiz:', error);
+    }
+  };
 
     return (
         <>
@@ -29,7 +86,7 @@ const Quizes = () => {
           <div className="col-auto">
             <h2 className="mb-0">
               Quizes
-              <span className="fw-normal text-body-tertiary ms-3">(32)</span>
+              <span className="fw-normal text-body-tertiary ms-3">({quizzes.length})</span>
             </h2>
           </div>
           <div className="col-auto ">
@@ -52,7 +109,7 @@ const Quizes = () => {
                   href="#"
                 >
                   <span>All</span>
-                  <span className="text-body-tertiary fw-semibold">(32)</span>
+                  <span className="text-body-tertiary fw-semibold">({quizzes.length})</span>
                 </a>
               </li>
             </ul>
@@ -71,6 +128,7 @@ const Quizes = () => {
                     type="search"
                     placeholder="Search Quiz"
                     aria-label="Search"
+                    onChange={handleChange}
                   />
                   <span className="fas fa-search search-box-icon" />
                 </form>
@@ -225,7 +283,7 @@ const Quizes = () => {
                   data-sort="projectprogress"
                   style={{ width: "5%" }}
                 >
-                  PROGRESS
+                  QUESTIONS
                 </th>
                 <th
                   className="sort align-middle text-end"
@@ -243,610 +301,36 @@ const Quizes = () => {
               </tr>
             </thead>
             <tbody className="list " id="project-list-table-body">
-              <tr className="position-static">
+            {filteredQuizzes.map((quiz,index)=>
+              <tr key={quiz.idquiz} className="position-static">
                 <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <a className="fw-bold fs-8" href="#">
-                    Quiz 1
-                  </a>
+                  <Link className="fw-bold fs-8" to={`/questionquiz/${quiz.idquiz}`}>
+                  {quiz.quiztitle}
+                  </Link>
                 </td>
-                <td className="align-middle white-space-nowrap assigness ps-3 py-4">
+                <td className="align-middle white-space-nowrap assigness ps-5 py-4 ">
                   <div className="avatar-group avatar-group-dense">
                     <a
                       className="dropdown-toggle dropdown-caret-none d-inline-block"
                       href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      data-bs-auto-close="outside"
                     >
-                      <div className="avatar avatar-s  rounded-circle">
-                        <img
-                          className="rounded-circle "
-                          src="../../assets/img/team/34.webp"
-                          alt=""
-                        />
-                      </div>
+                      {quiz.noofinvitations}
                     </a>
-                    <div
-                      className="dropdown-menu avatar-dropdown-menu p-0 overflow-hidden"
-                      style={{ width: 320 }}
-                    >
-                      <div className="position-relative">
-                        <div
-                          className="bg-holder z-n1"
-                          style={{
-                            backgroundImage:
-                              "url(../../assets/img/bg/bg-32.png)",
-                            backgroundSize: "auto"
-                          }}
-                        />
-                        {/*/.background-holder*/}
-                        <div className="p-3">
-                          <div className="text-end">
-                            <button className="btn p-0 me-2">
-                              <span className="fa-solid fa-user-plus text-white" />
-                            </button>
-                            <button className="btn p-0">
-                              <span className="fa-solid fa-ellipsis text-white" />
-                            </button>
-                          </div>
-                          <div className="text-center">
-                            <div className="avatar avatar-xl status-online position-relative me-2 me-sm-0 me-xl-2 mb-2">
-                              <img
-                                className="rounded-circle border border-light-subtle"
-                                src="../../assets/img/team/34.webp"
-                                alt=""
-                              />
-                            </div>
-                            <h6 className="text-white">Jean Renoir</h6>
-                            <p className="text-light text-opacity-50 fw-semibold fs-10 mb-2">
-                              @tyrion222
-                            </p>
-                            <div className="d-flex flex-center mb-3">
-                              <h6 className="text-white mb-0">
-                                224{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  connections
-                                </span>
-                              </h6>
-                              <span
-                                className="fa-solid fa-circle text-body-tertiary mx-1"
-                                data-fa-transform="shrink-10 up-2"
-                              />
-                              <h6 className="text-white mb-0">
-                                23{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  mutual
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-body-emphasis">
-                        <div className="p-3 border-bottom border-translucent">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex">
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-phone" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-message" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg">
-                                <span className="fa-solid fa-video" />
-                              </button>
-                            </div>
-                            <button className="btn btn-phoenix-primary">
-                              <span className="fa-solid fa-envelope me-2" />
-                              Send Email
-                            </button>
-                          </div>
-                        </div>
-                        <ul className="nav d-flex flex-column py-3 border-bottom">
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body d-inline-block"
-                                data-feather="clipboard"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                Assigned Projects
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body"
-                                data-feather="pie-chart"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                View activiy
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="p-3 d-flex justify-content-between">
-                        <a
-                          className="btn btn-link p-0 text-decoration-none"
-                          href="#!"
-                        >
-                          Details{" "}
-                        </a>
-                        <a
-                          className="btn btn-link p-0 text-decoration-none text-danger"
-                          href="#!"
-                        >
-                          Unassign{" "}
-                        </a>
-                      </div>
-                    </div>
-                    <a
-                      className="dropdown-toggle dropdown-caret-none d-inline-block"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      data-bs-auto-close="outside"
-                    >
-                      <div className="avatar avatar-s  rounded-circle">
-                        <img
-                          className="rounded-circle "
-                          src="../../assets/img/team/59.webp"
-                          alt=""
-                        />
-                      </div>
-                    </a>
-                    <div
-                      className="dropdown-menu avatar-dropdown-menu p-0 overflow-hidden"
-                      style={{ width: 320 }}
-                    >
-                      <div className="position-relative">
-                        <div
-                          className="bg-holder z-n1"
-                          style={{
-                            backgroundImage:
-                              "url(../../assets/img/bg/bg-32.png)",
-                            backgroundSize: "auto"
-                          }}
-                        />
-                        {/*/.bg-holder*/}
-                        <div className="p-3">
-                          <div className="text-end">
-                            <button className="btn p-0 me-2">
-                              <span className="fa-solid fa-user-plus text-white" />
-                            </button>
-                            <button className="btn p-0">
-                              <span className="fa-solid fa-ellipsis text-white" />
-                            </button>
-                          </div>
-                          <div className="text-center">
-                            <div className="avatar avatar-xl status-online position-relative me-2 me-sm-0 me-xl-2 mb-2">
-                              <img
-                                className="rounded-circle border border-light-subtle"
-                                src="../../assets/img/team/59.webp"
-                                alt=""
-                              />
-                            </div>
-                            <h6 className="text-white">Katerina Karenin</h6>
-                            <p className="text-light text-opacity-50 fw-semibold fs-10 mb-2">
-                              @tyrion222
-                            </p>
-                            <div className="d-flex flex-center mb-3">
-                              <h6 className="text-white mb-0">
-                                224{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  connections
-                                </span>
-                              </h6>
-                              <span
-                                className="fa-solid fa-circle text-body-tertiary mx-1"
-                                data-fa-transform="shrink-10 up-2"
-                              />
-                              <h6 className="text-white mb-0">
-                                23{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  mutual
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-body-emphasis">
-                        <div className="p-3 border-bottom border-translucent">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex">
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-phone" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-message" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg">
-                                <span className="fa-solid fa-video" />
-                              </button>
-                            </div>
-                            <button className="btn btn-phoenix-primary">
-                              <span className="fa-solid fa-envelope me-2" />
-                              Send Email
-                            </button>
-                          </div>
-                        </div>
-                        <ul className="nav d-flex flex-column py-3 border-bottom">
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body d-inline-block"
-                                data-feather="clipboard"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                Assigned Projects
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body"
-                                data-feather="pie-chart"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                View activiy
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="p-3 d-flex justify-content-between">
-                        <a
-                          className="btn btn-link p-0 text-decoration-none"
-                          href="#!"
-                        >
-                          Details{" "}
-                        </a>
-                        <a
-                          className="btn btn-link p-0 text-decoration-none text-danger"
-                          href="#!"
-                        >
-                          Unassign{" "}
-                        </a>
-                      </div>
-                    </div>
-                    <a
-                      className="dropdown-toggle dropdown-caret-none d-inline-block"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      data-bs-auto-close="outside"
-                    >
-                      <div className="avatar avatar-s  rounded-circle">
-                        <img
-                          className="rounded-circle "
-                          src="../../assets/img/team/35.webp"
-                          alt=""
-                        />
-                      </div>
-                    </a>
-                    <div
-                      className="dropdown-menu avatar-dropdown-menu p-0 overflow-hidden"
-                      style={{ width: 320 }}
-                    >
-                      <div className="position-relative">
-                        <div
-                          className="bg-holder z-n1"
-                          style={{
-                            backgroundImage:
-                              "url(../../assets/img/bg/bg-32.png)",
-                            backgroundSize: "auto"
-                          }}
-                        />
-                        {/*/.bg-holder*/}
-                        <div className="p-3">
-                          <div className="text-end">
-                            <button className="btn p-0 me-2">
-                              <span className="fa-solid fa-user-plus text-white" />
-                            </button>
-                            <button className="btn p-0">
-                              <span className="fa-solid fa-ellipsis text-white" />
-                            </button>
-                          </div>
-                          <div className="text-center">
-                            <div className="avatar avatar-xl status-online position-relative me-2 me-sm-0 me-xl-2 mb-2">
-                              <img
-                                className="rounded-circle border border-light-subtle"
-                                src="../../assets/img/team/35.webp"
-                                alt=""
-                              />
-                            </div>
-                            <h6 className="text-white">Stanly Drinkwater</h6>
-                            <p className="text-light text-opacity-50 fw-semibold fs-10 mb-2">
-                              @tyrion222
-                            </p>
-                            <div className="d-flex flex-center mb-3">
-                              <h6 className="text-white mb-0">
-                                224{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  connections
-                                </span>
-                              </h6>
-                              <span
-                                className="fa-solid fa-circle text-body-tertiary mx-1"
-                                data-fa-transform="shrink-10 up-2"
-                              />
-                              <h6 className="text-white mb-0">
-                                23{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  mutual
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-body-emphasis">
-                        <div className="p-3 border-bottom border-translucent">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex">
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-phone" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-message" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg">
-                                <span className="fa-solid fa-video" />
-                              </button>
-                            </div>
-                            <button className="btn btn-phoenix-primary">
-                              <span className="fa-solid fa-envelope me-2" />
-                              Send Email
-                            </button>
-                          </div>
-                        </div>
-                        <ul className="nav d-flex flex-column py-3 border-bottom">
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body d-inline-block"
-                                data-feather="clipboard"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                Assigned Projects
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body"
-                                data-feather="pie-chart"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                View activiy
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="p-3 d-flex justify-content-between">
-                        <a
-                          className="btn btn-link p-0 text-decoration-none"
-                          href="#!"
-                        >
-                          Details{" "}
-                        </a>
-                        <a
-                          className="btn btn-link p-0 text-decoration-none text-danger"
-                          href="#!"
-                        >
-                          Unassign{" "}
-                        </a>
-                      </div>
-                    </div>
-                    <a
-                      className="dropdown-toggle dropdown-caret-none d-inline-block"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      data-bs-auto-close="outside"
-                    >
-                      <div className="avatar avatar-s  rounded-circle">
-                        <img
-                          className="rounded-circle "
-                          src="../../assets/img/team/58.webp"
-                          alt=""
-                        />
-                      </div>
-                    </a>
-                    <div
-                      className="dropdown-menu avatar-dropdown-menu p-0 overflow-hidden"
-                      style={{ width: 320 }}
-                    >
-                      <div className="position-relative">
-                        <div
-                          className="bg-holder z-n1"
-                          style={{
-                            backgroundImage:
-                              "url(../../assets/img/bg/bg-32.png)",
-                            backgroundSize: "auto"
-                          }}
-                        />
-                        {/*/.bg-holder*/}
-                        <div className="p-3">
-                          <div className="text-end">
-                            <button className="btn p-0 me-2">
-                              <span className="fa-solid fa-user-plus text-white" />
-                            </button>
-                            <button className="btn p-0">
-                              <span className="fa-solid fa-ellipsis text-white" />
-                            </button>
-                          </div>
-                          <div className="text-center">
-                            <div className="avatar avatar-xl status-online position-relative me-2 me-sm-0 me-xl-2 mb-2">
-                              <img
-                                className="rounded-circle border border-light-subtle"
-                                src="../../assets/img/team/58.webp"
-                                alt=""
-                              />
-                            </div>
-                            <h6 className="text-white">Igor Borvibson</h6>
-                            <p className="text-light text-opacity-50 fw-semibold fs-10 mb-2">
-                              @tyrion222
-                            </p>
-                            <div className="d-flex flex-center mb-3">
-                              <h6 className="text-white mb-0">
-                                224{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  connections
-                                </span>
-                              </h6>
-                              <span
-                                className="fa-solid fa-circle text-body-tertiary mx-1"
-                                data-fa-transform="shrink-10 up-2"
-                              />
-                              <h6 className="text-white mb-0">
-                                23{" "}
-                                <span className="fw-normal text-light text-opacity-75">
-                                  mutual
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-body-emphasis">
-                        <div className="p-3 border-bottom border-translucent">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex">
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-phone" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg me-2">
-                                <span className="fa-solid fa-message" />
-                              </button>
-                              <button className="btn btn-phoenix-secondary btn-icon btn-icon-lg">
-                                <span className="fa-solid fa-video" />
-                              </button>
-                            </div>
-                            <button className="btn btn-phoenix-primary">
-                              <span className="fa-solid fa-envelope me-2" />
-                              Send Email
-                            </button>
-                          </div>
-                        </div>
-                        <ul className="nav d-flex flex-column py-3 border-bottom">
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body d-inline-block"
-                                data-feather="clipboard"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                Assigned Projects
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                          <li className="nav-item">
-                            <a
-                              className="nav-link px-3 d-flex flex-between-center"
-                              href="#!"
-                            >
-                              {" "}
-                              <span
-                                className="me-2 text-body"
-                                data-feather="pie-chart"
-                              />
-                              <span className="text-body-highlight flex-1">
-                                View activiy
-                              </span>
-                              <span className="fa-solid fa-chevron-right fs-11" />
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="p-3 d-flex justify-content-between">
-                        <a
-                          className="btn btn-link p-0 text-decoration-none"
-                          href="#!"
-                        >
-                          Details{" "}
-                        </a>
-                        <a
-                          className="btn btn-link p-0 text-decoration-none text-danger"
-                          href="#!"
-                        >
-                          Unassign{" "}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="avatar avatar-s  rounded-circle">
-                      <div className="avatar-name rounded-circle ">
-                        <span>+2</span>
-                      </div>
-                    </div>
+                    
                   </div>
                 </td>
-                <td className="align-middle white-space-nowrap start ps-3 py-4">
-                  <p className="mb-0 fs-9 text-body">01:00:00</p>
+                <td className="align-middle white-space-nowrap start ps-4 py-4">
+                  <p className="mb-0 fs-9 text-body">{quiz.duration}</p>
                 </td>
-                <td className="align-middle white-space-nowrap deadline ps-3 py-4">
-                  <p className="mb-0 fs-9 text-body">May 21, 2028</p>
+                <td className="align-middle white-space-nowrap deadline ps-3 py-4 ">
+                  <p className="mb-0 fs-9 text-body ">{quiz.deadline.toLocaleString()}</p>
                 </td>
-                <td className="align-middle white-space-nowrap task ps-3 py-4">
-                  <p className="fw-bo text-body fs-9 mb-0">Easy</p>
+                <td className="align-middle white-space-nowrap task ps-4 py-4">
+                  <p className="fw-bo text-body fs-9 mb-0">{quiz.difficultylevel}</p>
                 </td>
-                <td className="align-middle white-space-nowrap ps-3 projectprogress">
-                  <p className="text-body-secondary fs-10 mb-0">145 / 145</p>
-                  <div className="progress" style={{ height: 3 }}>
-                    <div
-                      className="progress-bar bg-success"
-                      style={{ width: "100%" }}
-                      role="progressbar"
-                      aria-valuenow={25}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    />
-                  </div>
+                <td className="align-middle white-space-nowrap task ps-7 py-4">
+                  <p className="mb-0 fs-9 text-body">{quiz.noofquestions}</p>
+                  
                 </td>
                 <td className="align-middle white-space-nowrap text-end statuses">
                   <span className="badge badge-phoenix fs-10 badge-phoenix-success">
@@ -873,14 +357,14 @@ const Quizes = () => {
                         
 
                       </a>
-                      <a className="dropdown-item" href="/editquiz">
+                      <Link className="dropdown-item" to={`/editquiz/${quiz.idquiz}`}>
                       <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
 
                         Edit
 
-                      </a>
+                      </Link>
                       <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <button  id="removeButton" className="dropdown-item text-danger" onClick={() => handleRemoveQuiz(quiz.idquiz)}>
                       <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
 
                         Remove   
@@ -889,6 +373,7 @@ const Quizes = () => {
                   </div>
                 </td>
               </tr>
+            )}
             
             </tbody>
           </table>

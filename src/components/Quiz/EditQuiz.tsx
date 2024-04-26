@@ -1,6 +1,104 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { quiz } from '../../Types/quiz.type';
+import { category } from '../../Types/category.type';
+import axios from 'axios';
 
 const EditQuiz= () => {
+  const { idquiz } = useParams();
+  const [quizData, setQuizData] = useState<quiz | null>(null);
+  const [filteredCategories, setFilteredCategories] = useState<category[]>([]);
+  const [categories, setCategories] = useState<category[]>([]);
+  const [quizTitle, setquizTitle] = useState<string>(''); 
+  const [quizDifficultyLevel, setquizDifficultyLevel] = useState<string>(''); 
+  const [quizNoofInvitations, setquizNoofInvitations] = useState<string>(''); 
+  const [quizNoofQuestions, setquizNoofQuestions] = useState<string>(''); 
+  const [quizMaterial, setquizMaterial] = useState<string>(''); 
+  const [quizDuration, setquizDuration] = useState<string>(''); 
+  const [quizDeadline, setquizDeadline] = useState<string>(''); 
+  const [quizCreator, setquizCreator] = useState<string>('Firas'); 
+  const [quizidCategory, setquizidCategory] = useState<string>(''); 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/quiz/findOneQuiz/${idquiz}`)
+      .then((res) => res.json())
+      .then((data: any) => {
+        console.log('Data fetched from the API:', data); // Ajoutez ce log pour voir les données récupérées
+        setQuizData(data);
+        if (data) {
+          setquizTitle(data.quiztitle);
+          setquizDifficultyLevel(data.difficultylevel);
+          setquizNoofInvitations(data.noofinvitations);
+          setquizNoofQuestions(data.noofquestions);
+          setquizMaterial(data.material);
+          setquizDuration(data.duration);
+          setquizDeadline(data.deadline);
+          setquizCreator(data.creator);
+          setquizidCategory(data.id_category);
+
+
+
+        }
+      })
+      .catch((error) => console.error('Error fetching quiz details:', error));
+  }, [idquiz]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/category/findallCategories');
+      const categoriesData: category[] = response.data.map((item: any) => ({
+        id:item.id,
+        categoryname: item.categoryname,
+        idcategory: item.idcategory,
+      }));
+      setCategories(categoriesData);
+      setFilteredCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+  if (!quizData) {
+    return <div>Loading...</div>;
+  }
+  
+
+  const handleUpdate = async (e:React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3000/quiz/updateQuiz/${idquiz}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quiztitle: quizTitle, 
+          id_category:quizidCategory,
+          noofquestions: quizNoofQuestions,
+          duration: quizDuration,
+          noofinvitations: quizNoofInvitations,
+          material: quizMaterial,
+          deadline: quizDeadline,
+          difficultylevel: quizDifficultyLevel,
+          creator: quizCreator
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Quiz updated successfully!');
+        navigate('/listquiz');
+      } else {
+        console.error('Error updating quiz');
+      }
+    } catch (error) {
+      console.error('Unexpected error updating quiz:', error);
+    }
+  };
+
+
+
     return (
     <>
      
@@ -19,7 +117,7 @@ const EditQuiz= () => {
   <h2 className="mb-4">Edit Quiz</h2>
   <div className="row">
     <div className="col-xl-9">
-      <form className="row g-3 mb-6">
+      <form className="row g-3 mb-6" onSubmit={handleUpdate}>
         <div className="col-sm-6 col-md-8">
           <div className="form-floating">
             <input
@@ -27,25 +125,33 @@ const EditQuiz= () => {
               id="floatingInputGrid"
               type="text"
               placeholder="Project title"
+              value={quizTitle}
+                     onChange={(e) => setquizTitle(e.target.value)}
             />
             <label htmlFor="floatingInputGrid">New Quiz Title</label>
           </div>
         </div>
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
-            <select className="form-select" id="floatingSelectTask">
-              <option selected>Select Category</option>
-              <option value={1}>Category One</option>
-              <option value={2}>Category Two</option>
-              <option value={3}>Category Three</option>
-            </select>
+          <select
+      className="form-select"
+      id="floatingSelectTask"
+      value={quizidCategory}
+      onChange={(e) => setquizidCategory(e.target.value)}
+      name='id_category'
+    >
+      <option className='d-none' value="">Select Category</option>
+      {categories.map((category) => (
+        <option key={category.idcategory}  value={category.idcategory}>{category.categoryname}</option>
+      ))}
+    </select>
             <label htmlFor="floatingSelectTask">Category</label>
           </div>
         </div>
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
             <select className="form-select" id="floatingSelectPrivacy">
-              <option selected>Select Difficulty Level</option>
+              <option className='d-none' value="">Select Difficulty Level</option>
               <option value={1}>Beginner</option>
               <option value={2}>Intermidiate</option>
               <option value={3}>Expert</option>
@@ -57,12 +163,13 @@ const EditQuiz= () => {
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
          
-            <textarea
+            <input
               className="form-control"
               id="floatingProjectOverview"
               placeholder="Leave a comment here"
               style={{ height: 50 }}
-              defaultValue={""}
+              value={quizNoofInvitations}
+              onChange={(e) => setquizNoofInvitations(e.target.value)} 
             />
             <label htmlFor="floatingProjectOverview">Invitations number</label>
           
@@ -71,12 +178,13 @@ const EditQuiz= () => {
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
          
-            <textarea
+            <input
               className="form-control"
               id="floatingProjectOverview"
               placeholder="Leave a comment here"
               style={{ height: 50 }}
-              defaultValue={""}
+              value={quizNoofQuestions}
+              onChange={(e) => setquizNoofQuestions(e.target.value)} 
             />
             <label htmlFor="floatingProjectOverview">Questions number</label>
           
@@ -87,8 +195,12 @@ const EditQuiz= () => {
           <input
               className="form-control"
               id="floatingInputBudget"
-              type="file"
+              type="text"
               placeholder="Budget"
+              name="material"
+              value={quizMaterial}
+              onChange={(e) => setquizMaterial(e.target.value)} 
+              
             />
             <label htmlFor="floatingInputBudget">Material</label>
           </div>
@@ -102,6 +214,8 @@ const EditQuiz= () => {
                 type="time"
                 
                 data-options='{"disableMobile":false}'
+                value={quizDuration}
+                onChange={(e) => setquizDuration(e.target.value)} 
               />
               <label className="ps-6" htmlFor="floatingInputStartDate">
                 Duration
@@ -119,6 +233,8 @@ const EditQuiz= () => {
                 type="date"
                 placeholder="deadline"
                 data-options='{"disableMobile":true}'
+                value={quizDeadline}
+                onChange={(e) => setquizDeadline(e.target.value)} 
                 
               />
               <label className="ps-6" htmlFor="floatingInputDeadline">
@@ -166,7 +282,7 @@ const EditQuiz= () => {
               <button className="btn btn-phoenix-primary px-5">Cancel</button>
             </div>
             <div className="col-auto">
-              <button className="btn btn-primary px-5 px-sm-15">
+              <button className="btn btn-primary px-5 px-sm-15"  type="submit">
                 Update Quiz
               </button>
             </div>

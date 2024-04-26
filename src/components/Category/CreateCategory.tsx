@@ -1,6 +1,42 @@
-import React from "react";
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const CreateCategory= () => {
+  const [formData, setFormData] = useState({
+    id:'42d97d8d-4452-4996-88b3-dff14612502b',
+    categoryname: '',
+
+  });
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<string[]>([]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+      setFormData({ ...formData, [name]: value });
+    };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('categoryname', formData.categoryname);
+      formDataToSend.append('id', formData.id); 
+
+      const response = await axios.post('http://localhost:3000/category/createCategory', formData);
+      console.log(response.data);
+      setCategories([...categories, formData.categoryname]);
+      setFormData({ ...formData, categoryname: '' });
+      navigate('/listcategory');
+      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+    } catch (error) {
+      console.error('Error:', error);
+      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+    }
+  };
+
     return (
     <>
      
@@ -19,166 +55,22 @@ const CreateCategory= () => {
   <h2 className="mb-4">Create new Category</h2>
   <div className="row">
     <div className="col-xl-9">
-      <form className="row g-3 mb-6">
+      <form onSubmit={handleSubmit} className="row g-3 mb-6">
         <div className="col-sm-6 col-md-8">
           <div className="form-floating">
             <input
               className="form-control"
               id="floatingInputGrid"
               type="text"
+              name='categoryname'
               placeholder="Project title"
+              value={formData.categoryname}
+              onChange={handleChange}
             />
             <label htmlFor="floatingInputGrid">Category name</label>
           </div>
         </div>
-        {/* <div className="col-sm-6 col-md-4">
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelectTask">
-              <option selected>Select Quiz</option>
-              <option value={1}>Quiz One</option>
-              <option value={2}>Quiz Two</option>
-              <option value={3}>Quiz Three</option>
-            </select>
-            <label htmlFor="floatingSelectTask">Category</label>
-          </div>
-        </div>
-        <div className="col-sm-6 col-md-4">
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelectPrivacy">
-              <option selected>Select Difficulty Level</option>
-              <option value={1}>Beginner</option>
-              <option value={2}>Intermidiate</option>
-              <option value={3}>Expert</option>
-            </select>
-            <label htmlFor="floatingSelectPrivacy">Difficulty Level</label>
-          </div>
-        </div>
-      
-        <div className="col-sm-6 col-md-4">
-          <div className="form-floating">
-         
-            <textarea
-              className="form-control"
-              id="floatingProjectOverview"
-              placeholder="Leave a comment here"
-              style={{ height: 50 }}
-              defaultValue={""}
-            />
-            <label htmlFor="floatingProjectOverview">Invitations number</label>
-          
-          </div>
-        </div>
-        <div className="col-sm-6 col-md-4">
-          <div className="form-floating">
-         
-            <textarea
-              className="form-control"
-              id="floatingProjectOverview"
-              placeholder="Leave a comment here"
-              style={{ height: 50 }}
-              defaultValue={""}
-            />
-            <label htmlFor="floatingProjectOverview">Questions number</label>
-          
-          </div>
-        </div>
-        <div className="col-sm-6 col-md-4">
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelectAdmin">
-              <option selected>Select Creator</option>
-              <option value={1}>Manager One</option>
-              <option value={2}>Manager Two</option>
-              <option value={3}>Manager Three</option>
-            </select>
-            <label htmlFor="floatingSelectAdmin">Creator</label>
-          </div>
-        </div>
-        <div className="col-sm-6 col-md-4">
-          <div className="flatpickr-input-container">
-            <div className="form-floating">
-              <input
-                className="form-control datetimepicker"
-                id="floatingInputStartDate"
-                type="date"
-                placeholder="end date"
-                data-options='{"disableMobile":true}'
-              />
-              <label className="ps-6" htmlFor="floatingInputStartDate">
-                Start date
-              </label>
-              <span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary" />
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-6 col-md-4">
-          <div className="flatpickr-input-container">
-            <div className="form-floating">
-              <input
-                className="form-control datetimepicker"
-                id="floatingInputDeadline"
-                type="date"
-                placeholder="deadline"
-                data-options='{"disableMobile":true}'
-                
-              />
-              <label className="ps-6" htmlFor="floatingInputDeadline">
-                Deadline
-              </label>
-              <span className="uil uil-calendar-alt flatpickr-icon text-body-tertiary" />
-            </div>
-          </div>
-        </div>
-        <div className="col-12 gy-6">
-          <div className="form-floating">
-            <textarea
-              className="form-control"
-              id="floatingProjectOverview"
-              placeholder="Leave a comment here"
-              style={{ height: 100 }}
-              defaultValue={""}
-            />
-            <label htmlFor="floatingProjectOverview">project overview</label>
-          </div>
-        </div>
-        <div className="col-md-6 gy-6">
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelectClient">
-              <option selected>Select client</option>
-              <option value={1}>Client One</option>
-              <option value={2}>Client Two</option>
-              <option value={3}>Client Three</option>
-            </select>
-            <label htmlFor="floatingSelectClient">client</label>
-          </div>
-        </div>
-        <div className="col-md-6 gy-6">
-          <div className="form-floating">
-            <input
-              className="form-control"
-              id="floatingInputBudget"
-              type="text"
-              placeholder="Budget"
-            />
-            <label htmlFor="floatingInputBudget">Budget</label>
-          </div>
-        </div>
-        <div className="col-12 gy-6">
-           <select
-            className="form-select"
-            id="organizerMultiple"
-            data-choices="data-choices"
-            data-options='{"removeItemButton":true,"placeholder":true}'
-          >
-            <option value="">Add tags</option>
-            <option>Stupidity</option>
-            <option>Jerry</option>
-            <option>Not_the_mouse</option>
-            <option>Rick</option>
-            <option>Biology</option>
-            <option>Neurology</option>
-            <option>Brainlessness</option>
-          </select>
-        </div> */}
+ 
         <div className="col-12 gy-6">
           <div className="row g-3 justify-content-end">
             <div className="col-auto">
