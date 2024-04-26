@@ -1,15 +1,32 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers,faUserTie,faUserPlus,faUsersCog, faCalendar, faCalendarAlt, faCalendarCheck, faCalendarDays, faCalendarXmark, faL, faA, faCircleQuestion  } from '@fortawesome/free-solid-svg-icons';
-const Navbar = () => {
+import { useAuth } from '../../Services/Auth/AuthContext';
 
 
+
+function Navbar() {
   const [collapsed, setCollapsed] = useState(false);
-
-  const handleToggleSidebar = () => {
+  const toggleNavbar = () => {
     setCollapsed(!collapsed);
+    if (collapsed) {
+      document.documentElement.classList.remove('navbar-vertical-collapsed');
+    } else {
+      document.documentElement.classList.add('navbar-vertical-collapsed');
+    }
   };
+  // const [collapsed, setCollapsed] = useState(false);
 
+  // const handleToggleSidebar = () => {
+  //   setCollapsed(!collapsed);
+  // };
+
+
+    const { isAuthenticated, logoutUser } = useAuth();
+  
+    const handleLogout = () => {
+      logoutUser();
+    };
 
 
   return (
@@ -76,6 +93,7 @@ const Navbar = () => {
               <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-CRM" >
                 <li className="collapsed-nav-item-title d-none">Employees</li>
 
+                {/* {isAuthenticated && ( */}
                 <li className="nav-item">
                   <a  className="nav-link"  href="/addEmployee"  data-bs-toggle="" aria-expanded="false" >
                     <div className="d-flex align-items-center">
@@ -84,7 +102,9 @@ const Navbar = () => {
                     </div>
                   </a>
                 </li>
+                   {/* )} */}
 
+                    {/* {isAuthenticated && ( */}
                 <li className="nav-item">
                   <a className="nav-link"  href="/listEmployees" data-bs-toggle=""  aria-expanded="false" >
                     <div className="d-flex align-items-center">
@@ -96,6 +116,7 @@ const Navbar = () => {
                     </div>
                   </a>
                 </li>
+                {/* )} */}
 
               </ul>
             </div>
@@ -420,12 +441,15 @@ const Navbar = () => {
     </div>
   </div>
   <div className="navbar-vertical-footer">
-    <button className="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center">
-      <span className="uil uil-left-arrow-to-left fs-8" />
-      <span className="uil uil-arrow-from-right fs-8" />
-      <span className="navbar-vertical-footer-text ms-2">Collapsed View</span>
-    </button>
-  </div>
+      <button
+        className="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"
+        type="button"
+        onClick={toggleNavbar}
+      >
+        <span className={collapsed ? "uil uil-arrow-from-right fs-8" : "uil uil-left-arrow-to-left fs-8"} />
+        <span className="navbar-vertical-footer-text ms-2">{collapsed ? "Expanded View" : "Collapsed View"}</span>
+      </button>
+    </div>
 </nav>
 
 

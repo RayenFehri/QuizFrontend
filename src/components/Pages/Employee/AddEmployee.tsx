@@ -15,15 +15,16 @@ const AddEmployee = () => {
     joiningdate: '',
     profilepicture: '',
     groupe: '',
+    role:3
   });
 
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Fonction pour gérer le changement d'entrée dans le formulaire
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    // Vérifiez si l'entrée est un champ d'image
+    
     if (e.target.type === 'file') {
-      // Assurez-vous que e.target est un HTMLInputElement avant d'accéder à la propriété files
+      
       const inputElement = e.target as HTMLInputElement;
       const file = inputElement.files && inputElement.files[0];
       if (file) {
@@ -31,7 +32,7 @@ const AddEmployee = () => {
         setFormData({ ...formData, [e.target.name]: imageUrl });
       }
     } else {
-      // Sinon, mettez simplement à jour l'état avec la valeur de l'entrée
+      
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
@@ -39,12 +40,16 @@ const AddEmployee = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/user/createUserProfile', formData);
+      const formDataWithRole = {
+        ...formData,
+        role:3, 
+      };
+      const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
       console.log(response.data);
-      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+      
     } catch (error) {
       console.error('Error:', error);
-      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+      
     }
   };
 

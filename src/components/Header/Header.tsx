@@ -1,7 +1,25 @@
-import React from 'react'
-import './Header.css'
+import React, { useState } from 'react';
+import './Header.css';
 import logo from './logo.png';
+import supabase from '../../Services/supabase/supabase.service';
+import axios from 'axios';
+import { Button } from 'react-bootstrap';
+
+
+
 const Header = () => {
+
+  
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3000/auth/logout'); // Faites une requête POST vers votre endpoint de déconnexion
+      console.log("User successfully logged out.");
+      window.location.href = '/login'; // Redirection vers la page de connexion
+    } catch (error:any) {
+      console.error("Error logging out: ", error.message);
+    }
+  };
+
   return (
 <>
 <nav
@@ -1012,16 +1030,16 @@ const Header = () => {
               <hr />
               <div className="px-3">
                 {" "}
-                <a
+                <Button
                   className="btn btn-phoenix-secondary d-flex flex-center w-100"
-                  href="#!"
+                  onClick={handleLogout}
                 >
                   {" "}
                   <span className="me-2" data-feather="log-out">
                     {" "}
                   </span>
                   Sign out
-                </a>
+                </Button>
               </div>
               <div className="my-2 text-center fw-bold fs-10 text-body-quaternary">
                 <a className="text-body-quaternary me-1" href="#!">

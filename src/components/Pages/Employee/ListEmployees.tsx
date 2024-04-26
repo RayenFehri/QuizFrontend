@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { profile } from 'console'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 export interface User {
   id: string
@@ -16,7 +17,7 @@ export interface User {
     lastname: string
     birthdate: string | null
     address: string | null
-    // Ajoutez d'autres champs de profil si nécessaire
+   
   }
 }
 
@@ -44,48 +45,61 @@ export const ListEmployees = () => {
       .catch((error) => console.error('Erreur lors de la récupération des utilisateurs:', error));
   }, []);
 
-  // Enregistrer la position de défilement avant la suppression
-  const handleDeleteUser = (id: string) => {
-    scrollPositionRef.current = document.getElementById('customers-table-body')!.scrollTop;
-    deleteUser(id);
-  };
 
-  // Suppression d'un utilisateur
   const deleteUser = async (id: string) => {
     if (id === undefined) {
       console.error('User ID is undefined');
       return;
     }
-
+  
     const userToDelete = users.find(user => user.id === id);
     if (!userToDelete) {
       console.error('User not found');
       return;
     }
     const username = userToDelete.email;
-
-    const confirmDelete = window.confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${username} ?`);
-    if (!confirmDelete) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:3000/user/remove/${id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        console.log('User deleted successfully!');
-        const updatedUsers = users.filter(user => user.id !== id);
-        setUsers(updatedUsers);
-        setFilteredUsers(prevFilteredUsers => prevFilteredUsers.filter(user => user.id !== id));
-
-        // Restaurer la position de défilement après la suppression
-        document.getElementById('customers-table-body')!.scrollTop = scrollPositionRef.current;
-      } else {
-        console.error('Error deleting user');
+  
+    const confirmDelete = await Swal.fire({
+      title: `Are you sure?`,
+      text: `You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true,
+    });
+  
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:3000/user/remove/${id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          console.log('User deleted successfully!');
+          const updatedUsers = users.filter(user => user.id !== id);
+          setUsers(updatedUsers);
+          setFilteredUsers(prevFilteredUsers => prevFilteredUsers.filter(user => user.id !== id));
+  
+          // Restore scroll position after deletion
+          document.getElementById('customers-table-body')!.scrollTop = scrollPositionRef.current;
+          
+          await Swal.fire({
+            title: 'Deleted!',
+            text: ' User has been deleted.',
+            icon: 'success'
+          });
+        } else {
+          console.error('Error deleting user');
+        }
+      } catch (error) {
+        console.error('Unexpected error deleting user:', error);
       }
-    } catch (error) {
-      console.error('Unexpected error deleting user:', error);
+    } else if (confirmDelete.dismiss === Swal.DismissReason.cancel) {
+      await Swal.fire({
+        title: 'Cancelled',
+        text: `User is safe :)`,
+        icon: 'error'
+      });
     }
   };
 
@@ -149,7 +163,7 @@ export const ListEmployees = () => {
                 </div>
                 <div className="col-auto scrollbar overflow-hidden-y flex-grow-1">
 
-                </div>
+                </div> 
                 <div className="col-auto">
                   <button className="btn btn-link text-body me-4 px-0">
                     <span className="fa-solid fa-file-export fs-9 me-2" />
@@ -207,7 +221,7 @@ export const ListEmployees = () => {
                         <td className="align-middle text-end">{user.profile.joiningdate}</td>
                         <td className="align-middle text-end">
                           <Link to={`/editEmployee/${user.id}`} className="me-2"><FontAwesomeIcon icon={faUserEdit} style={{ color: "#1662e3" }} /></Link>
-                          <a href="#" className="me-2" onClick={() => handleDeleteUser(user.id)}><FontAwesomeIcon icon={faUserTimes} style={{ color: "#ee1127" }} /></a>
+                          <a href="#" className="me-2" onClick={() => deleteUser(user.id)}><FontAwesomeIcon icon={faUserTimes} style={{ color: "#ee1127" }} /></a>
                           <Link to={`/profileEmployee/${user.id}`} ><FontAwesomeIcon icon={faEye} style={{ color: "#fb983c" }} /></Link>
                         </td>
                       </tr>

@@ -49,7 +49,7 @@ const ProfileEmployee = () => {
   
 
   return (
-    <div className='main' id='top'>
+    <div className='content' id='top'>
 <section className="  pt-20 pb-9">
   <div className="container-small">
     <nav className="mb-5" aria-label="breadcrumb">
