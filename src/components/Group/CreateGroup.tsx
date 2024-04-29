@@ -1,6 +1,55 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import { group } from "../../Types/group.type";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const CreateGroup= () => {
+  const [formData, setFormData] = useState({
+    groupname: "",
+    grouplocation: "",
+    grouphead: "Yassine",
+  });
+  const navigate = useNavigate();
+
+  const [groups, setGroups] = useState<group[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<group[]>([]);
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+    if (type === "file") {
+      const inputElement = e.target as HTMLInputElement;
+      const file = inputElement.files && inputElement.files[0];
+      if (file) {
+        setFormData({ ...formData, [name]: file });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+  
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("grouphead", formData.grouphead);
+
+      const response = await axios.post(
+        "http://localhost:3000/group/createGroup",
+        formData
+      );
+      navigate("/listgroup");
+
+      console.log(response.data);
+      
+      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+    } catch (error) {
+      console.error("Error:", error);
+      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+    }
+  };
+
     return (
     <>
      
@@ -19,7 +68,7 @@ const CreateGroup= () => {
   <h2 className="mb-4">Create new Group</h2>
   <div className="row">
     <div className="col-xl-9">
-      <form className="row g-3 mb-6">
+      <form className="row g-3 mb-6"onSubmit={handleSubmit}>
         <div className="col-sm-6 col-md-8">
           <div className="form-floating">
             <input
@@ -27,6 +76,9 @@ const CreateGroup= () => {
               id="floatingInputGrid"
               type="text"
               placeholder="Project title"
+              name="groupname"
+              value={formData.groupname}
+              onChange={handleChange}
             />
             <label htmlFor="floatingInputGrid">Group name</label>
             
@@ -45,6 +97,20 @@ const CreateGroup= () => {
             <label htmlFor="floatingSelectTask">Group Head</label>
           </div>
         </div>
+        <div className="col-sm-6 col-md-4">
+                <div className="form-floating ">
+                  <input
+                    className="form-control"
+                    id="floatingInputBudget"
+                    type="text"
+                    placeholder="Budget"
+                    name="grouplocation"
+                    value={formData.grouplocation}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="floatingInputBudget">Location</label>
+                </div>
+              </div>
         {/* <div className="col-sm-6 col-md-4">
           <div className="form-floating">
             <select className="form-select" id="floatingSelectTask">

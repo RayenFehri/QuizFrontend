@@ -7,18 +7,20 @@ import { useParams } from "react-router-dom";
 
 const QuestionQuiz = () => {
   const [formData, setFormData] = useState({
-    id_quiz:'',
-    question_content: '',
-    explantation: '',
-    questiontype: '',
-    answers: [{content:'',iscorrect:false}],
+    id_quiz: "",
+    question_content: "",
+    explantation: "",
+    questiontype: "",
+    answers: [{ content: "", iscorrect: false }],
   });
   const { idquiz } = useParams<{ idquiz: string }>();
   useEffect(() => {
     // Fetch quiz data based on id_quiz when component mounts
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/quiz/findoneQuiz/${idquiz}`); // Adjust the API endpoint according to your backend route
+        const response = await axios.get(
+          `http://localhost:3000/quiz/findoneQuiz/${idquiz}`
+        ); // Adjust the API endpoint according to your backend route
         const quizData = response.data;
         // Update formData state with quizData
         setFormData({
@@ -34,66 +36,68 @@ const QuestionQuiz = () => {
   }, [idquiz]);
   const [quiz, setQuiz] = useState<quiz[]>([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const handleOptionChange = (index: number, iscorrect: boolean) => {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          answers: prevFormData.answers.map((answer, i) =>
-            i === index ? { ...answer, iscorrect } : answer
-          ),
-        }));
-      };
-      
-      const handleAnswerChange = (
-        index: number,
-        e: ChangeEvent<HTMLInputElement>
-      ) => {
-        const { value } = e.target;
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          answers: prevFormData.answers.map((answer, i) =>
-            i === index ? { ...answer, content: value } : answer
-          ),
-        }));
-      };
-      const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-          const response = await axios.post(
-            "http://localhost:3000/question/createQuestion",
-            {
-              id_quiz: formData.id_quiz,
-              question_content: formData.question_content,
-              explantation: formData.explantation,
-              questiontype: formData.questiontype,
-              answers: formData.answers.map((answer) => ({
-                content: answer.content,
-                iscorrect: answer.iscorrect,
-              })),
-            }
-          );
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error:", error);
+  const handleOptionChange = (index: number, iscorrect: boolean) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      answers: prevFormData.answers.map((answer, i) =>
+        i === index ? { ...answer, iscorrect } : answer
+      ),
+    }));
+  };
+
+  const handleAnswerChange = (
+    index: number,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      answers: prevFormData.answers.map((answer, i) =>
+        i === index ? { ...answer, content: value } : answer
+      ),
+    }));
+  };
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/question/createQuestion",
+        {
+          id_quiz: formData.id_quiz,
+          question_content: formData.question_content,
+          explantation: formData.explantation,
+          questiontype: formData.questiontype,
+          answers: formData.answers.map((answer) => ({
+            content: answer.content,
+            iscorrect: answer.iscorrect,
+          })),
         }
-      };
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const [options, setOptions] = useState([{ content: "", iscorrect: false }]);
 
-//   const addOption = () => {
-//     setOptions([...options, { content: "", iscorrect: false }]);
-//   };
-const addOption = () => {
+  //   const addOption = () => {
+  //     setOptions([...options, { content: "", iscorrect: false }]);
+  //   };
+  const addOption = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       answers: [
         ...prevFormData.answers,
-        { content: "", iscorrect: false } // Ensure to use isCorrect instead of iscorrect
-      ]
+        { content: "", iscorrect: false }, // Ensure to use isCorrect instead of iscorrect
+      ],
     }));
     setOptions([...options, { content: "", iscorrect: false }]);
   };
@@ -227,9 +231,13 @@ const addOption = () => {
                               name={`group${optionIndex}`}
                               type="radio"
                               id={`inline-radio-1-${optionIndex}`}
-                              checked={formData.answers[optionIndex].iscorrect === true}
+                              checked={
+                                formData.answers[optionIndex].iscorrect === true
+                              }
                               value="true"
-                              onChange={(e) => handleOptionChange(optionIndex, true)}
+                              onChange={(e) =>
+                                handleOptionChange(optionIndex, true)
+                              }
                             />
                             <Form.Check
                               inline
@@ -237,9 +245,14 @@ const addOption = () => {
                               name={`group${optionIndex}`}
                               type="radio"
                               id={`inline-radio-2-${optionIndex}`}
-                              checked={formData.answers[optionIndex].iscorrect === false}
+                              checked={
+                                formData.answers[optionIndex].iscorrect ===
+                                false
+                              }
                               value="false"
-                              onChange={(e) => handleOptionChange(optionIndex, false)}
+                              onChange={(e) =>
+                                handleOptionChange(optionIndex, false)
+                              }
                             />
                           </div>
                           <div className="product-variant-select-menu mb-3">
@@ -249,8 +262,11 @@ const addOption = () => {
                               data-choices="data-choices"
                               data-options='{"removeItemButton":true,"placeholder":true}'
                               name="content"
-                              value={formData.answers[optionIndex].content} 
-                              onChange={(e) => handleAnswerChange(optionIndex, e)}                            />
+                              value={formData.answers[optionIndex].content}
+                              onChange={(e) =>
+                                handleAnswerChange(optionIndex, e)
+                              }
+                            />
                           </div>
                         </div>
                       ))}
@@ -280,10 +296,7 @@ const addOption = () => {
             totalPages={Math.ceil(questions.length / questionsPerPage)}
             onPageChange={setCurrentPage}
           />
-          <button
-            className="btn btn-secondary"
-            type="submit"
-          >
+          <button className="btn btn-secondary" type="submit">
             Next
           </button>
         </div>
@@ -291,6 +304,5 @@ const addOption = () => {
     </div>
   );
 };
-  
 
 export default QuestionQuiz;

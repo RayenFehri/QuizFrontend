@@ -30,7 +30,7 @@ function App() {
         <Route path="/questionquiz/:idquiz" element={<QuestionQuiz/>} />
 
           <Route path="/creategroup" element={<CreateGroup/>} />
-          <Route path="/editgroup" element={<EditGroup/>} />
+          <Route path="/editgroup/:idgroup" element={<EditGroup/>} />
           <Route path="/listgroup" element={<ListGroup/>} />
           <Route path="/chatbot" element={<ChatBot/>} />
           <Route path="/editcategory/:idcategory" element={<EditCategory/>} />

@@ -1,6 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { group } from "../../Types/group.type";
 
 const EditGroup= () => {
+  const {idgroup} = useParams();
+  const [groupData, setGroupData] = useState<group | null>(null);
+
+  const[groupName, setGroupName] = useState<string>('');
+  const[groupLocation, setGroupLocation] = useState<string>('');
+  const[groupHead, setGroupHead] = useState<string>('Testeur');
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/group/getOneGroup/${idgroup}`)
+      .then((res) => res.json())
+      .then((data: any) => {
+        console.log('Data fetched from the API:', data); // Ajoutez ce log pour voir les données récupérées
+        setGroupData(data);
+        if (data) {
+          setGroupName(data.groupname);
+          setGroupHead(data.grouphead);
+          setGroupLocation(data.grouplocation);
+          
+        }
+      })
+      .catch((error) => console.error('Error fetching group details:', error));
+  }, [idgroup]);
+
+  if (!groupData) {
+    return <div>Loading...</div>;
+  }
+  const handleUpdate = async (e:React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3000/group/updateGroup/${idgroup}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          groupname: groupName, 
+          grouplocation: groupLocation,
+          grouphead: groupHead,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('group updated successfully!');
+        navigate('/listgroup');
+      } else {
+        console.error('Error updating group');
+      }
+    } catch (error) {
+      console.error('Unexpected error updating group:', error);
+    }
+  };
     return (
     <>
      
@@ -19,14 +74,17 @@ const EditGroup= () => {
   <h2 className="mb-4">Edit Group</h2>
   <div className="row">
     <div className="col-xl-9">
-      <form className="row g-3 mb-6">
+      <form className="row g-3 mb-6" onSubmit={handleUpdate}>
         <div className="col-sm-6 col-md-8">
           <div className="form-floating">
             <input
               className="form-control"
               id="floatingInputGrid"
               type="text"
-              placeholder="Project title"
+              placeholder="Group name"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+
             />
             <label htmlFor="floatingInputGrid">New group name</label>  
           </div>  
@@ -43,6 +101,19 @@ const EditGroup= () => {
             <label htmlFor="floatingSelectTask">Group Head</label>
           </div>
         </div>
+        <div className="col-sm-6 col-md-4">
+                <div className="form-floating ">
+                  <input
+                    className="form-control"
+                    id="floatingInputBudget"
+                    type="text"
+                    placeholder="Budget"
+                    value={groupLocation}
+                    onChange={(e) => setGroupLocation(e.target.value)}
+                  />
+                  <label htmlFor="floatingInputBudget">Location</label>
+                </div>
+              </div>
         {/* <div className="col-sm-6 col-md-4">
           <div className="form-floating">
             <select className="form-select" id="floatingSelectTask">

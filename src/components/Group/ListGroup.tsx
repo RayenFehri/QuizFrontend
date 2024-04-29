@@ -1,8 +1,57 @@
 import { faHome , faListAlt , faPlusSquare, faQuestion , faUser ,faUserShield ,faUserPlus, faList, faLayerGroup, faTrash, faTrashAlt, faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from "react";
-const ListGroup = () => {
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { group } from '../../Types/group.type';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
+const ListGroup = () => {
+  const [groups, setGroups] = useState<group[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<group[]>([]);
+  const scrollPositionRef = useRef<number>(0);
+
+  
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/group/getAllGroup');
+      const groupsData: group[] = response.data.map((item: any) => ({
+        idgroup:item.idgroup,
+        groupname: item.groupname,
+        grouplocation: item.grouplocation,
+        grouphead: item.grouphead,
+
+      }));
+      setGroups(groupsData);
+      setFilteredGroups(groupsData);
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+    }
+  };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const filter = groups.filter(
+      (grp) => grp.groupname?.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredGroups(filter);
+  };
+  const handleRemoveGroup = async (idgroup: string) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/group/deleteGroup/${idgroup}`);
+      if (response.status === 200) {
+        // Remove the category from the list
+        setGroups(groups.filter((grp) => grp.idgroup !== idgroup));
+        setFilteredGroups(filteredGroups.filter((grp) => grp.idgroup !== idgroup));
+        console.log('Group removed successfully!');
+      } else {
+        console.error('Error removing group');
+      }
+    } catch (error) {
+      console.error('Unexpected error removing group:', error);
+    }
+  };
     return (
         <>
 <div className="content col-md-10"> 
@@ -29,11 +78,11 @@ const ListGroup = () => {
           <div className="col-auto">
             <h2 className="mb-0">
               Groupes
-              <span className="fw-normal text-body-tertiary ms-3">(32)</span>
+              <span className="fw-normal text-body-tertiary ms-3">({groups.length})</span>
             </h2>
           </div>
           <div className="col-auto ">
-            <a className="btn btn-primary px-5" href="/createquiz">
+            <a className="btn btn-primary px-5" href="/creategroup">
               <i className="fa-solid fa-plus me-2" />
               Create new Group
             </a>
@@ -52,7 +101,7 @@ const ListGroup = () => {
                   href="#"
                 >
                   <span>All</span>
-                  <span className="text-body-tertiary fw-semibold">(32)</span>
+                  <span className="text-body-tertiary fw-semibold">({groups.length})</span>
                 </a>
               </li>
             </ul>
@@ -71,6 +120,7 @@ const ListGroup = () => {
                     type="search"
                     placeholder="Search group"
                     aria-label="Search"
+                    onChange={handleChange}
                   />
                   <span className="fas fa-search search-box-icon" />
                 </form>
@@ -248,10 +298,12 @@ const ListGroup = () => {
               </tr>
             </thead>
             <tbody className="list " id="project-list-table-body">
-              <tr className="position-static">
+            {filteredGroups.map((group,index)=>
+
+              <tr key={group.idgroup} className="position-static">
                 <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
                   <a className="fw-bold fs-8" href="#">
-                    Web development
+                  {group.groupname}
                   </a>
                 </td>
                 
@@ -275,143 +327,14 @@ const ListGroup = () => {
                         
 
                       </a>
-                      <a className="dropdown-item" href="/editgroup">
+                      <Link className="dropdown-item" to={`/editgroup/${group.idgroup}`}>
                       <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
 
                         Edit
 
-                      </a>
+                      </Link>
                       <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" >
-                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
-
-                        Remove   
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr className="position-static">
-                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <a className="fw-bold fs-8" href="#">
-                    Design
-                  </a>
-                </td>
-                
-                <td className="align-middle text-end white-space-nowrap pe-0 action">
-                  <div className="btn-reveal-trigger position-static">
-                    <button
-                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      data-boundary="window"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      data-bs-reference="parent"
-                    >
-                      <span className="fas fa-ellipsis-h fs-10" />
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-end py-2">
-                      <a className="dropdown-item" href="#!">
-                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
-                        View
-                        
-
-                      </a>
-                      <a className="dropdown-item" href="/editgroup">
-                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
-
-                        Edit
-
-                      </a>
-                      <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" >
-                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
-
-                        Remove   
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr className="position-static">
-                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <a className="fw-bold fs-8" href="#">
-                    Marketing
-                  </a>
-                </td>
-                
-                <td className="align-middle text-end white-space-nowrap pe-0 action">
-                  <div className="btn-reveal-trigger position-static">
-                    <button
-                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      data-boundary="window"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      data-bs-reference="parent"
-                    >
-                      <span className="fas fa-ellipsis-h fs-10" />
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-end py-2">
-                      <a className="dropdown-item" href="#!">
-                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
-                        View
-                        
-
-                      </a>
-                      <a className="dropdown-item" href="/editgroup">
-                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
-
-                        Edit
-
-                      </a>
-                      <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" >
-                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
-
-                        Remove   
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr className="position-static">
-                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <a className="fw-bold fs-8" href="#">
-                    Finance
-                  </a>
-                </td>
-                
-                <td className="align-middle text-end white-space-nowrap pe-0 action">
-                  <div className="btn-reveal-trigger position-static">
-                    <button
-                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      data-boundary="window"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      data-bs-reference="parent"
-                    >
-                      <span className="fas fa-ellipsis-h fs-10" />
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-end py-2">
-                      <a className="dropdown-item" href="#!">
-                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
-                        View
-                        
-
-                      </a>
-                      <a className="dropdown-item" href="/editgroup">
-                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
-
-                        Edit
-
-                      </a>
-                      <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <button  id="removeButton" className="dropdown-item text-danger" onClick={() => handleRemoveGroup(group.idgroup)} >
                       <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
 
                         Remove   
@@ -421,6 +344,7 @@ const ListGroup = () => {
                 </td>
               </tr>
             
+            )}
             </tbody>
           </table>
         </div>
