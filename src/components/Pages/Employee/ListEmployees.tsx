@@ -4,6 +4,7 @@ import { profile } from 'console'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2';
+import { getCurrentUser, getCurrentUserGroup } from '../../../Services/Auth/auth.service'
 
 export interface User {
   id: string
@@ -25,7 +26,9 @@ export interface User {
 export const ListEmployees = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const scrollPositionRef = useRef<number>(0); // Référence pour enregistrer la position de défilement
+  const userGroup = getCurrentUserGroup(); 
+  console.log("userGroup", userGroup)
+  const currentUser = getCurrentUser();
 
   // Liste users
   useEffect(() => {
@@ -33,17 +36,34 @@ export const ListEmployees = () => {
       .then((res) => res.json())
       .then((data: any[]) => {
         console.log("Données utilisateurs reçues :", data);
-        const usersData = data.map(item => ({
-          id: item.user.id,
-          email: item.user.email,
-          phone: item.user.phone,
-          profile: item.profile
-        }));
+        let usersData: User[] = [];
+        if (currentUser.authenticationData.user.user_metadata.role === 2) {
+          // Si le rôle de l'utilisateur est 2
+          usersData = data
+            .filter(user => user.user.user_metadata.role === 3 && user.profile.groupe === userGroup) // Filtrer les utilisateurs ayant le rôle 3 et le même groupe que l'utilisateur actuel
+            .map(item => ({
+                id: item.user.id,
+                email: item.user.email,
+                phone: item.user.phone,
+                profile: item.profile 
+              }));
+        } else if (currentUser.authenticationData.user.user_metadata.role === 1) {
+          // Si le rôle de l'utilisateur est 1
+          usersData = data
+            .filter(user => user.user.user_metadata.role === 3) // Filtrer les utilisateurs ayant le rôle 3
+            .map(item => ({
+                id: item.user.id,
+                email: item.user.email,
+                phone: item.user.phone,
+                profile: item.profile 
+              }));
+        }
         setUsers(usersData);
         setFilteredUsers(usersData);
       })
       .catch((error) => console.error('Erreur lors de la récupération des utilisateurs:', error));
   }, []);
+
 
 
   const deleteUser = async (id: string) => {
@@ -81,7 +101,6 @@ export const ListEmployees = () => {
           setFilteredUsers(prevFilteredUsers => prevFilteredUsers.filter(user => user.id !== id));
   
           // Restore scroll position after deletion
-          document.getElementById('customers-table-body')!.scrollTop = scrollPositionRef.current;
           
           await Swal.fire({
             title: 'Deleted!',
@@ -137,7 +156,7 @@ export const ListEmployees = () => {
             <li className="nav-item">
               <a className="nav-link active" aria-current="page" href="#">
                 <span>All </span>
-                <span className="text-body-tertiary fw-semibold">(68817)</span>
+                <span className="text-body-tertiary fw-semibold">({users.length})</span>
               </a>
             </li>
           </ul>
@@ -220,8 +239,16 @@ export const ListEmployees = () => {
                         <td className="align-middle text-end">{user.profile.birthdate}</td>
                         <td className="align-middle text-end">{user.profile.joiningdate}</td>
                         <td className="align-middle text-end">
-                          <Link to={`/editEmployee/${user.id}`} className="me-2"><FontAwesomeIcon icon={faUserEdit} style={{ color: "#1662e3" }} /></Link>
-                          <a href="#" className="me-2" onClick={() => deleteUser(user.id)}><FontAwesomeIcon icon={faUserTimes} style={{ color: "#ee1127" }} /></a>
+                        {currentUser.authenticationData.user.user_metadata.role !== 3 ? ( 
+                    <>
+                      <Link to={`/editEmployee/${user.id}`} className="me-2">
+                        <FontAwesomeIcon icon={faUserEdit} style={{ color: "#1662e3" }} />
+                      </Link>
+                      <a href="#" className="me-2" onClick={() => deleteUser(user.id)}>
+                        <FontAwesomeIcon icon={faUserTimes} style={{ color: "#ee1127" }} />
+                      </a>
+                    </>
+                  ) : null}
                           <Link to={`/profileEmployee/${user.id}`} ><FontAwesomeIcon icon={faEye} style={{ color: "#fb983c" }} /></Link>
                         </td>
                       </tr>

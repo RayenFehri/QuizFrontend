@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import emailjs from '@emailjs/browser';
+import axios from 'axios';
+import { quiz } from '../../Types/Quiz.type';
 
 const SendEmailComponent = () => {
-
   const [toName, setToName] = useState('');
   const [toEmail, setToEmail] = useState('');
   const [toEmails, setToEmails] = useState('');
-
   const [fromName, setFromName] = useState('');
   const [fromEmail, setFromEmail] = useState('');
-
   const [message, setMessage] = useState('');
   const [subject, setSubject] = useState('');
-  
+  const [selectedQuizId, setSelectedQuizId] = useState('');
+  const [quizzes, setQuizzes] = useState<quiz[]>([]);
+  const [filteredQuizzes, setFilteredQuizzes] = useState<quiz[]>([]);
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -23,50 +24,76 @@ const SendEmailComponent = () => {
     const publicKey="RK1JxrTvnFhH0MZJY";
 
 
-  const toEmailArray = toEmails.split(/[;,]\s*/);
+ // Create a new object that contains dynamic template params
+ const templateParams = {
+  to_name: toName,
+  to_email:toEmail , // Convertir le tableau en chaîne avec des virgules
+  from_name: "Société",
+  from_email: "rayenfehri12@gmail.com",
+  message: message,
+  subject: subject,
+  quiz_id: selectedQuizId, // Ajoutez l'ID du quiz sélectionné dans les paramètres du modèle
+};
 
-    // Create a new object that contains dynamic template params
-    const templateParams = {
-      to_name: toName,
-      to_email: toEmailArray.join(', '), // Convertir le tableau en chaîne avec des virgules
-      from_name: "Société",
-      from_email:"rayenfehri12@gmail.com",
-      message: message,
-      subject: subject,
-    };
-    // Send the email using EmailJS
-    emailjs.send(serviceId, templateId, templateParams, publicKey)
-      .then((response) => {
-        console.log('Email sent successfully!', response);
-        setToName('');
-        setToEmail('');
-        setFromName('');
-        setFromEmail('');
-        setMessage('');
-        setSubject('');
-      })
-      .catch((error) => {
-        console.error('Error sending email:', error);
-      });
-  }
+// Envoyez l'e-mail en utilisant EmailJS
+emailjs.send(serviceId, templateId, templateParams, publicKey)
+  .then((response) => {
+    console.log('Email sent successfully!', response);
+    setToName('');
+    setToEmail('');
+    setFromName('');
+    setFromEmail('');
+    setMessage('');
+    setSubject('');
+  })
+  .catch((error) => {
+    console.error('Error sending email:', error);
+  });
+};
 
-  return (
-    <div className="content pt-0" style={{width: "80%"}}>
+useEffect(() => {
+fetchQuiz();
+}, []);
+
+const fetchQuiz = async () => {
+try {
+  const response = await axios.get('http://localhost:3000/quiz/findallQuizes');
+  const quizzesData: quiz[] = response.data.map((item: any) => ({
+    id_category:item.id_category,
+    idquiz: item.idquiz,
+    quiztitle: item.quiztitle,
+    material : item.material,
+    duration: item.duration,
+    deadline: item.deadline,
+    noofinvitations:item.noofinvitations,
+    difficultylevel: item.difficultylevel,
+    noofquestions: item.noofquestions,
+    creator: item.creator,
+  }));
+  setQuizzes(quizzesData);
+  setFilteredQuizzes(quizzesData);
+} catch (error) {
+  console.error('Error fetching categories:', error);
+}
+};
+
+const handleQuizChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+setSelectedQuizId(event.target.value);
+};
+
+return (
+<div className="content pt-0" style={{ width: "80%" }}>
   <div className="email-container">
     <div className="row gx-lg-6 gx-3 py-4 z-2 position-sticky bg-body email-header">
-      
       <div className="col-auto flex-1">
-        <div className="search-box w-100">
-         
-        </div>
+        <div className="search-box w-100"></div>
       </div>
     </div>
     <div className="row g-lg-6 mb-8">
-  
       <div className="col">
         <div className="card email-content">
           <div className="card-body">
-            <form className="d-flex flex-column h-100" onSubmit={handleSubmit} >
+            <form className="d-flex flex-column h-100" onSubmit={handleSubmit}>
               <div className="row g-3 mb-2">
                 <div className="col-4">
                   <input
@@ -86,13 +113,6 @@ const SendEmailComponent = () => {
                     onChange={(e) => setToName(e.target.value)}
                   />
                 </div>
-                {/* <div className="col-4">
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder="to name"
-                  />
-                </div> */}
                 <div className="col-12">
                   <input
                     className="form-control"
@@ -105,13 +125,33 @@ const SendEmailComponent = () => {
               </div>
               <div className="mb-3 flex-1">
                 <textarea
-                     className="form-control"
-                     cols={30}
-                     rows={10}
-                     value={message}
-                     onChange={(e) => setMessage(e.target.value)}
-                     defaultValue={""}
+                  className="form-control"
+                  cols={30}
+                  rows={10}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  defaultValue={""}
                 />
+              </div>
+              <div className="col-sm-6 col-md-4">
+                <div className="form-floating">
+                  <select
+                    className="form-select"
+                    id="floatingSelectTask"
+                    value={selectedQuizId}
+                    onChange={handleQuizChange}
+                  >
+                    <option className="d-none" value="">
+                      Select Quizes
+                    </option>
+                    {filteredQuizzes.map((quiz) => (
+                      <option key={quiz.idquiz} value={quiz.idquiz}>
+                        {quiz.quiztitle}
+                      </option>
+                    ))}
+                  </select>
+                  <label htmlFor="floatingSelectTask">Select Quiz</label>
+                </div>
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex">
@@ -152,34 +192,8 @@ const SendEmailComponent = () => {
       </div>
     </div>
   </div>
- 
 </div>
-
-    // <div className="content">
-    // <form onSubmit={handleSubmit} className='emailForm'>
-    //   <input
-    //     type="text"
-    //     placeholder="Your Name"
-    //     value={name}
-    //     onChange={(e) => setName(e.target.value)}
-    //   />
-    //   <input
-    //     type="email"
-    //     placeholder="Your Email"
-    //     value={email}
-    //     onChange={(e) => setEmail(e.target.value)}
-    //   />
-    //   <textarea
-    //     cols={30}
-    //     rows={10}
-    //     value={message}
-    //     onChange={(e) => setMessage(e.target.value)}
-    //   >
-    //   </textarea>
-    //   <button type="submit">Send Email</button>
-    // </form>
-    // </div>
-  )
-}
+);
+};
 
 export default SendEmailComponent;

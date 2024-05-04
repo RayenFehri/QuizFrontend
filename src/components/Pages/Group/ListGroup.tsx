@@ -1,91 +1,7 @@
-import { faEdit, faEye, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { quiz } from "../../../Types/Quiz.type";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import emailjs from '@emailjs/browser';
-
-
-const Quizes = () => {
-  const [quizzes, setQuizzes] = useState<quiz[]>([]);
-  const [filteredQuizzes, setFilteredQuizzes] = useState<quiz[]>([]);
-
-
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
-  const [recipientEmails, setRecipientEmails] = useState('');
-  const [emailMessage, setEmailMessage] = useState('');
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/quiz/findallQuizes');
-      const quizzesData: quiz[] = response.data.map((item: any) => ({
-        id_category:item.id_category,
-        idquiz: item.idquiz,
-        quiztitle: item.quiztitle,
-        material : item.material,
-        duration: item.duration,
-        deadline: item.deadline,
-        noofinvitations:item.noofinvitations,
-        difficultylevel: item.difficultylevel,
-        noofquestions: item.noofquestions,
-        creator: item.creator,
-
-      }));
-      setQuizzes(quizzesData);
-      setFilteredQuizzes(quizzesData);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filter = quizzes.filter(
-      (quiz) => quiz.quiztitle?.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredQuizzes(filter);
-  };
-  const handleRemoveQuiz = async (idquiz: string) => {
-    try {
-      const response = await axios.delete(`http://localhost:3000/quiz/deleteQuiz/${idquiz}`);
-      if (response.status === 200) {
-        // Remove the category from the list
-        setQuizzes(quizzes.filter((quiz) => quiz.idquiz !== idquiz));
-        setFilteredQuizzes(filteredQuizzes.filter((quiz) => quiz.idquiz !== idquiz));
-        console.log('Quiz removed successfully!');
-      } else {
-        console.error('Error removing quiz');
-      }
-    } catch (error) {
-      console.error('Unexpected error removing quiz:', error);
-    }
-  };
-
-
-  const handleSendQuiz = () => {
-    if (selectedQuiz && recipientEmails) {
-      // Construire le contenu de l'e-mail
-      const emailContent = `Bonjour,\n\nVoici le quiz "${selectedQuiz}" que je vous envoie.\n\n${emailMessage}\n\nCordialement,`;
-
-      // Envoyer l'e-mail en utilisant EmailJS
-      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-        to_email: recipientEmails,
-        message: emailContent,
-      }, 'YOUR_USER_ID')
-      .then((response) => {
-        console.log('Email sent successfully!', response);
-        // Réinitialiser les champs après l'envoi
-        setRecipientEmails('');
-        setEmailMessage('');
-      }, (error) => {
-        console.error('Error sending email:', error);
-      });
-    }
-  };
-
+import { faHome , faListAlt , faPlusSquare, faQuestion , faUser ,faUserShield ,faUserPlus, faList, faLayerGroup, faTrash, faTrashAlt, faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+const ListGroup = () => {
 
     return (
         <>
@@ -112,38 +28,17 @@ const Quizes = () => {
         <div className="row mb-4 gx-6 gy-3 align-items-center ">
           <div className="col-auto">
             <h2 className="mb-0">
-              Quizes
-              <span className="fw-normal text-body-tertiary ms-3">({quizzes.length})</span>
+              Groupes
+              <span className="fw-normal text-body-tertiary ms-3">(32)</span>
             </h2>
           </div>
           <div className="col-auto ">
             <a className="btn btn-primary px-5" href="/createquiz">
               <i className="fa-solid fa-plus me-2" />
-              Create new quiz
+              Create new Group
             </a>
           </div>
         </div>
-        {selectedQuiz && (
-        <div className="email-form">
-          <h3>Send Quiz</h3>
-          <div>
-            <label>Recipient Emails:</label>
-            <input
-              type="text"
-              value={recipientEmails}
-              onChange={(e) => setRecipientEmails(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Message:</label>
-            <textarea
-              value={emailMessage}
-              onChange={(e) => setEmailMessage(e.target.value)}
-            />
-          </div>
-          <button onClick={handleSendQuiz}>Send</button>
-        </div>
-      )}
         <div className="row g-3 justify-content-between align-items-end mb-4 ">
           
           {/* ------------------- All , ongoing , Finished , Postponed .... -------------------------------------------- */}
@@ -157,7 +52,7 @@ const Quizes = () => {
                   href="#"
                 >
                   <span>All</span>
-                  <span className="text-body-tertiary fw-semibold">({quizzes.length})</span>
+                  <span className="text-body-tertiary fw-semibold">(32)</span>
                 </a>
               </li>
             </ul>
@@ -174,9 +69,8 @@ const Quizes = () => {
                   <input
                     className="form-control search-input search"
                     type="search"
-                    placeholder="Search Quiz"
+                    placeholder="Search group"
                     aria-label="Search"
-                    onChange={handleChange}
                   />
                   <span className="fas fa-search search-box-icon" />
                 </form>
@@ -291,9 +185,9 @@ const Quizes = () => {
                   data-sort="projectName"
                   style={{ width: "30%" }}
                 >
-                  QUIZ TITLE
+                  GROUP NAME
                 </th>
-                <th
+                {/* <th
                   className="sort align-middle ps-3"
                   scope="col"
                   data-sort="assigness"
@@ -307,7 +201,7 @@ const Quizes = () => {
                   data-sort="start"
                   style={{ width: "10%" }}
                 >
-                  DURATION
+                  START DATE
                 </th>
                 <th
                   className="sort align-middle ps-3"
@@ -323,7 +217,7 @@ const Quizes = () => {
                   data-sort="task"
                   style={{ width: "12%" }}
                 >
-                  DIFFICULTY
+                  TASK
                 </th>
                 <th
                   className="sort align-middle ps-3"
@@ -331,7 +225,7 @@ const Quizes = () => {
                   data-sort="projectprogress"
                   style={{ width: "5%" }}
                 >
-                  QUESTIONS
+                  PROGRESS
                 </th>
                 <th
                   className="sort align-middle text-end"
@@ -345,46 +239,22 @@ const Quizes = () => {
                   className="sort align-middle text-end"
                   scope="col"
                   style={{ width: "10%" }}
+                /> */}
+                 <th
+                  className="sort align-middle text-end"
+                  scope="col"
+                  style={{ width: "10%" }}
                 />
               </tr>
             </thead>
             <tbody className="list " id="project-list-table-body">
-            {filteredQuizzes.map((quiz,index)=>
-              <tr key={quiz.idquiz} className="position-static">
+              <tr className="position-static">
                 <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
-                  <Link className="fw-bold fs-8" to={`/questionquiz/${quiz.idquiz}`}>
-                  {quiz.quiztitle}
-                  </Link>
+                  <a className="fw-bold fs-8" href="#">
+                    Web development
+                  </a>
                 </td>
-                <td className="align-middle white-space-nowrap assigness ps-5 py-4 ">
-                  <div className="avatar-group avatar-group-dense">
-                    <a
-                      className="dropdown-toggle dropdown-caret-none d-inline-block"
-                      href="#"
-                    >
-                      {quiz.noofinvitations}
-                    </a>
-                    
-                  </div>
-                </td>
-                <td className="align-middle white-space-nowrap start ps-4 py-4">
-                  <p className="mb-0 fs-9 text-body">{quiz.duration}</p>
-                </td>
-                <td className="align-middle white-space-nowrap deadline ps-3 py-4 ">
-                  <p className="mb-0 fs-9 text-body ">{quiz.deadline.toLocaleString()}</p>
-                </td>
-                <td className="align-middle white-space-nowrap task ps-4 py-4">
-                  <p className="fw-bo text-body fs-9 mb-0">{quiz.difficultylevel}</p>
-                </td>
-                <td className="align-middle white-space-nowrap task ps-7 py-4">
-                  <p className="mb-0 fs-9 text-body">{quiz.noofquestions}</p>
-                  
-                </td>
-                <td className="align-middle white-space-nowrap text-end statuses">
-                  <span className="badge badge-phoenix fs-10 badge-phoenix-success">
-                    completed
-                  </span>
-                </td>
+                
                 <td className="align-middle text-end white-space-nowrap pe-0 action">
                   <div className="btn-reveal-trigger position-static">
                     <button
@@ -405,14 +275,14 @@ const Quizes = () => {
                         
 
                       </a>
-                      <Link className="dropdown-item" to={`/editquiz/${quiz.idquiz}`}>
+                      <a className="dropdown-item" href="/editgroup">
                       <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
 
                         Edit
 
-                      </Link>
+                      </a>
                       <div className="dropdown-divider" />
-                      <button  id="removeButton" className="dropdown-item text-danger" onClick={() => handleRemoveQuiz(quiz.idquiz)}>
+                      <button  id="removeButton" className="dropdown-item text-danger" >
                       <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
 
                         Remove   
@@ -421,7 +291,135 @@ const Quizes = () => {
                   </div>
                 </td>
               </tr>
-            )}
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Design
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Marketing
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr className="position-static">
+                <td className="align-middle time white-space-nowrap ps-0 projectName py-4">
+                  <a className="fw-bold fs-8" href="#">
+                    Finance
+                  </a>
+                </td>
+                
+                <td className="align-middle text-end white-space-nowrap pe-0 action">
+                  <div className="btn-reveal-trigger position-static">
+                    <button
+                      className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-boundary="window"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-bs-reference="parent"
+                    >
+                      <span className="fas fa-ellipsis-h fs-10" />
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-end py-2">
+                      <a className="dropdown-item" href="#!">
+                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
+                        View
+                        
+
+                      </a>
+                      <a className="dropdown-item" href="/editgroup">
+                      <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
+
+                        Edit
+
+                      </a>
+                      <div className="dropdown-divider" />
+                      <button  id="removeButton" className="dropdown-item text-danger" >
+                      <FontAwesomeIcon className='ms-4' icon={faTrashAlt} /> 
+
+                        Remove   
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
             
             </tbody>
           </table>
@@ -489,4 +487,4 @@ const Quizes = () => {
 
 }
 
-export default Quizes;
+export default ListGroup;

@@ -1,15 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import { useAuth } from '../../../Services/Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../Services/Auth/AuthContext';
+import { login } from '../../../Services/Auth/auth.service';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
   const [authenticating, setAuthenticating] = useState<boolean>(false);
-  const { loginUser } = useAuth(); // Use the loginUser function provided by the authentication context
+  const { loginUser } = useAuth(); // Use the login function provided by the authentication context
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,28 +18,13 @@ const Login = () => {
     setAuthenticating(true);
 
     try {
-      const response = await fetch('http://localhost:3000/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      console.log( "data;:" ,data);
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Incorrect credentials');
-      }
-
-      // Call loginUser after successful login
-      loginUser(data.token); // Assuming the token is provided in the response
-console.log( "data.token;:" ,data.token);
-      // Redirect to the home page
-      navigate('/home', { replace: true });
+      // Call the login function from the authentication context
+      await login(email, password);
+      
+      // Redirect to the home page after successful login
+      navigate('/', { replace: true });
     } catch (error) {
-      setError(error instanceof Error ? error.message : '');
+      setError(error instanceof Error ? error.message : 'Erreur lors de la connexion');
     } finally {
       setAuthenticating(false);
     }

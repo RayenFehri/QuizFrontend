@@ -15,10 +15,23 @@ import Footer from './components/Footer/Footer';
 import ProfileEmployee from './components/Pages/Employee/ProfileEmployee';
 import ProfileManager from './components/Pages/Manager/ProfileManager';
 import { ListEmployees } from './components/Pages/Employee/ListEmployees';
-import QuestionQuiz from './components/Pages/Quiz/QuestionQuiz';
+import QuestionQuiz from './components/Pages/Quiz/Question_Quiz';
 import SendEmailComponent from './components/Email/SendEmail';
 import { AuthProvider } from './Services/Auth/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import { ListGroup } from 'react-bootstrap';
+import CreateCategory from './components/Pages/Category/CreateCategory';
+import { EditCategory } from './components/Pages/Category/EditCategory';
+import ListCategories from './components/Pages/Category/ListCategory';
+import ChatBot from './components/Pages/ChatBot.tsx/ChatBot';
+import CreateGroup from './components/Pages/Group/CreateGroup';
+import EditGroup from './components/Pages/Group/EditGroup';
+import CreateQuiz from './components/Pages/Quiz/AddQuiz';
+import EditQuiz from './components/Pages/Quiz/EditQuiz';
+import Quizes from './components/Pages/Quiz/ListQuiz';
+import ListReport from './components/Pages/Reports/ListReport';
+import ReportDetail from './components/Pages/Reports/ReportDetail';
+import ProfileUserSignIn from './components/Pages/Login/ProfileUserSignIn';
 
 function App() {
   return (
@@ -40,25 +53,48 @@ function AppContent() {
   return (
     <>
         
+        {shouldDisplayHeaderAndNavbar && (
+        <>
           <Header />
           <Navbar />
+        </>
+      )}
        
 
       <Routes>
         <Route path="/login" element={<Login />} />
         {/* <Route path="/" element={<PrivateRoute   />}> */}
-          <Route  path="/home" element={<Home />} />
+          <Route  path="/" element={<Home />} />
           <Route path="/addEmployee" element={<AddEmployee />} />
           <Route path="/listEmployees" element={<ListEmployees />} />
           <Route path="/editEmployee/:id" element={<EditEmployee />} />
           <Route path="/addManager" element={<AddManager />} />
-          <Route path="/listManagers" element={<ListManager />} />
+          <Route path="/listManagers" element={<ListManager onTotalManagersChange={function (total: number): void {
+          throw new Error('Function not implemented.');
+        } } />} />
           <Route path="/editManager" element={<EditManager />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profileEmployee/:id" element={<ProfileEmployee />} />
           <Route path="/profileManager" element={<ProfileManager />} />
-          <Route path="/questionQuiz" element={<QuestionQuiz />} />
+          {/* <Route path="/questionQuiz" element={<QuestionQuiz />} /> */}
           <Route path="/sendEmail" element={<SendEmailComponent />} />
+          <Route path="/creategroup" element={<CreateGroup/>} />
+          <Route path="/editgroup" element={<EditGroup/>} />
+          <Route path="/listgroup" element={<ListGroup/>} />
+          <Route path="/chatbot" element={<ChatBot/>} />
+          <Route path="/editcategory/:idcategory" element={<EditCategory/>} />
+          <Route path="/editquiz/:idquiz" element={<EditQuiz/>} />
+          <Route path="/listcategory" element={<ListCategories/>}/>
+          <Route path="/createcategory" element={<CreateCategory/>}/>
+          <Route  path="/createquiz" element={<CreateQuiz/>}/>
+          <Route path="/questionquiz/:idquiz" element={<QuestionQuiz/>} />
+          <Route path="/listquiz" element={<Quizes/>} />
+          <Route path="/listReport" element={<ListReport/>} />
+          <Route path="/reportDetail" element={<ReportDetail/>} />
+          <Route path="/myProfile" element={<ProfileUserSignIn />} />
+
+
+
         {/* </Route> */}
       </Routes>
       <Footer />

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers,faUserTie,faUserPlus,faUsersCog, faCalendar, faCalendarAlt, faCalendarCheck, faCalendarDays, faCalendarXmark, faL, faA, faCircleQuestion  } from '@fortawesome/free-solid-svg-icons';
+import { faUsers,faUserTie,faUserPlus,faUsersCog, faCalendar, faCalendarAlt, faCalendarCheck, faCalendarDays, faCalendarXmark, faL, faA, faCircleQuestion, faArrowRight, faArrowLeft, faQuestion, faList, faPlusSquare, faCommenting, faLayerGroup, faBuilding, faListAlt, faBookOpenReader, faBookSkull, faBookOpen  } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../Services/Auth/AuthContext';
+
 
 
 
@@ -174,7 +175,7 @@ function Navbar() {
                   <span className="fas fa-caret-right" />
                 </div>
                 <span className="nav-link-icon">
-                <FontAwesomeIcon icon={faCircleQuestion} />                
+                <FontAwesomeIcon icon={faQuestion}/> 
                 </span>
                 <span className="nav-link-text">Quiz</span>
               </div>
@@ -187,40 +188,44 @@ function Navbar() {
               >
                 <li className="collapsed-nav-item-title d-none">Email</li>
                 <li className="nav-item">
-                  <a
+                <a
                     className="nav-link"
-                    href="../apps/email/inbox.html"
+                    href="/createquiz"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
                     <div className="d-flex align-items-center">
+                    <FontAwesomeIcon icon={faPlusSquare} /> 
                       <span className="nav-link-text">Create new Quiz</span>
+                      
                     </div>
                   </a>
                   {/* more inner pages*/}
                 </li>
                 <li className="nav-item">
-                  <a
+                <a
                     className="nav-link"
-                    href="../apps/email/email-detail.html"
+                    href="/listquiz"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
-                    <div className="d-flex align-items-center">
-                      <span className="nav-link-text">List Quiz</span>
+                    <div className="d-flex align-items-center">  
+                      <FontAwesomeIcon icon={faList} /> 
+                      <span className="nav-link-text">Quiz List</span>
                     </div>
                   </a>
                   {/* more inner pages*/}
                 </li>
                 <li className="nav-item">
-                  <a
+                <a
                     className="nav-link"
-                    href="/sendEmail"
+                    href="/chatBot"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
-                    <div className="d-flex align-items-center">
-                      <span className="nav-link-text">Email</span>
+                    <div className="d-flex align-items-center">  
+                      <FontAwesomeIcon icon={faCommenting} /> 
+                      <span className="nav-link-text">Quiz ChatBot</span>
                     </div>
                   </a>
                   {/* more inner pages*/}
@@ -232,38 +237,43 @@ function Navbar() {
           <div className="nav-item-wrapper">
             <a
               className="nav-link dropdown-indicator label-1"
-              href="#nv-events"
+              href="#nv-Category"
               role="button"
               data-bs-toggle="collapse"
               aria-expanded="false"
-              aria-controls="nv-events"
+              aria-controls="nv-Category"
             >
               <div className="d-flex align-items-center">
                 <div className="dropdown-indicator-icon">
                   <span className="fas fa-caret-right" />
                 </div>
                 <span className="nav-link-icon">
-                  <span data-feather="bookmark" />
+                  <FontAwesomeIcon icon={faLayerGroup}/> 
                 </span>
-                <span className="nav-link-text"> Quiz Categoey</span>
+                <span className="nav-link-text">Category</span>
+                <span
+                  className="fa-solid fa-circle text-info ms-1 new-page-indicator"
+                  style={{ fontSize: 6 }}
+                />
               </div>
             </a>
             <div className="parent-wrapper label-1">
               <ul
                 className="nav collapse parent"
                 data-bs-parent="#navbarVerticalCollapse"
-                id="nv-events"
+                id="nv-Category"
               >
-                <li className="collapsed-nav-item-title d-none">Events</li>
+                <li className="collapsed-nav-item-title d-none">Category</li>
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="../apps/events/create-an-event.html"
+                    href="/listcategory"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
-                    <div className="d-flex align-items-center">
-                      <span className="nav-link-text">Create an event</span>
+                    <div className="d-flex align-items-center">  
+                      <FontAwesomeIcon icon={faList} /> 
+                      <span className="nav-link-text">Categories List</span>
                     </div>
                   </a>
                   {/* more inner pages*/}
@@ -271,12 +281,79 @@ function Navbar() {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="../apps/events/event-detail.html"
+                    href="/createcategory"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
                     <div className="d-flex align-items-center">
-                      <span className="nav-link-text">Event detail</span>
+                    <FontAwesomeIcon icon={faPlusSquare} /> 
+                      <span className="nav-link-text">Create new Category</span>
+                      
+                    </div>
+                  </a>
+                  {/* more inner pages*/}
+                </li>
+                
+              </ul>
+             
+            </div>
+            </div>
+
+            <div className="nav-item-wrapper">
+            <a
+              className="nav-link dropdown-indicator label-1"
+              href="#nv-Group"
+              role="button"
+              data-bs-toggle="collapse"
+              aria-expanded="false"
+              aria-controls="nv-Group"
+            >
+              <div className="d-flex align-items-center">
+                <div className="dropdown-indicator-icon">
+                  <span className="fas fa-caret-right" />
+                </div>
+                <span className="nav-link-icon">
+                <FontAwesomeIcon icon={faBuilding} /> {/* Add the FontAwesome icon here */}
+                </span>
+                <span className="nav-link-text">Group</span>
+                <span
+                  className="fa-solid fa-circle text-info ms-1 new-page-indicator"
+                  style={{ fontSize: 6 }}
+                />
+              </div>
+            </a>
+            <div className="parent-wrapper label-1">
+              <ul
+                className="nav collapse parent"
+                data-bs-parent="#navbarVerticalCollapse"
+                id="nv-Group"
+              >
+                <li className="collapsed-nav-item-title d-none">Group</li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    href="/listgroup"
+                    data-bs-toggle=""
+                    aria-expanded="false"
+                  >
+                    <div className="d-flex align-items-center">  
+                      <FontAwesomeIcon icon={faListAlt} /> 
+                      <span className="nav-link-text">Groups List</span>
+                    </div>
+                  </a>
+                  {/* more inner pages*/}
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    href="/creategroup"
+                    data-bs-toggle=""
+                    aria-expanded="false"
+                  >
+                    <div className="d-flex align-items-center">
+                    <FontAwesomeIcon icon={faBuilding} /> 
+                      <span className="nav-link-text">Create new group</span>
+                      
                     </div>
                   </a>
                   {/* more inner pages*/}
@@ -299,7 +376,7 @@ function Navbar() {
                   <span className="fas fa-caret-right" />
                 </div>
                 <span className="nav-link-icon">
-                  <span data-feather="trello" />
+                <FontAwesomeIcon icon={faBookOpen} />                
                 </span>
                 <span className="nav-link-text">Reports</span>
                 <span
@@ -318,12 +395,12 @@ function Navbar() {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="../apps/kanban/kanban.html"
+                    href="/listReport"
                     data-bs-toggle=""
                     aria-expanded="false"
                   >
                     <div className="d-flex align-items-center">
-                      <span className="nav-link-text">Kanban</span>
+                      <span className="nav-link-text">List Reports</span>
                     </div>
                   </a>
                   {/* more inner pages*/}
@@ -361,7 +438,7 @@ function Navbar() {
             </div>
           </div>
           {/* parent pages*/}
-          <div className="nav-item-wrapper">
+          {/* <div className="nav-item-wrapper">
             <a
               className="nav-link dropdown-indicator label-1"
               href="#nv-social"
@@ -375,7 +452,7 @@ function Navbar() {
                   <span className="fas fa-caret-right" />
                 </div>
                 <span className="nav-link-icon">
-                  <span data-feather="share-2" />
+                <FontAwesomeIcon icon={faCircleQuestion} />                
                 </span>
                 <span className="nav-link-text">Social</span>
               </div>
@@ -398,7 +475,7 @@ function Navbar() {
                       <span className="nav-link-text">Profile</span>
                     </div>
                   </a>
-                  {/* more inner pages*/}
+                  
                 </li>
                 <li className="nav-item">
                   <a
@@ -411,11 +488,12 @@ function Navbar() {
                       <span className="nav-link-text">Settings</span>
                     </div>
                   </a>
-                  {/* more inner pages*/}
+                  
                 </li>
               </ul>
             </div>
-          </div>
+          </div> 
+          */}
           {/* parent pages*/}
           <div className="nav-item-wrapper">
             <a
@@ -441,13 +519,14 @@ function Navbar() {
     </div>
   </div>
   <div className="navbar-vertical-footer">
-      <button
+  <button
         className="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"
         type="button"
         onClick={toggleNavbar}
       >
-        <span className={collapsed ? "uil uil-arrow-from-right fs-8" : "uil uil-left-arrow-to-left fs-8"} />
-        <span className="navbar-vertical-footer-text ms-2">{collapsed ? "Expanded View" : "Collapsed View"}</span>
+<span className="fs-8">
+  {collapsed ? <FontAwesomeIcon icon={faArrowRight} /> : <FontAwesomeIcon icon={faArrowLeft} />}
+</span>        <span className="navbar-vertical-footer-text ms-2">{collapsed ? "Expanded View" : "Collapsed View"}</span>
       </button>
     </div>
 </nav>

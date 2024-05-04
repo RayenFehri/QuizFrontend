@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
-import './Header.css';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.png';
 import supabase from '../../Services/supabase/supabase.service';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
+import { getCurrentUser, logout } from '../../Services/Auth/auth.service';
 
 
 
 const Header = () => {
 
-  
+    const [darkMode, setDarkMode] = useState(false);
+
+  const handleToggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You can apply further logic here to change the theme of your application
+    // For example, you can update CSS classes or apply styles dynamically
+  };
+
+
+  const user = getCurrentUser(); // Récupérer les données de l'utilisateur
+
+
+
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/auth/logout'); // Faites une requête POST vers votre endpoint de déconnexion
+      await logout();
       console.log("User successfully logged out.");
       window.location.href = '/login'; // Redirection vers la page de connexion
-    } catch (error:any) {
-      console.error("Error logging out: ", error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error logging out: ", error.message);
+      } else {
+        console.error("Unknown error occurred during logout.");
+      }
     }
   };
+  
+
+
 
   return (
 <>
-<nav
-  className="navbar navbar-top fixed-top navbar-expand"
-  id="navbarDefault"
-  
->
+<nav className={`navbar navbar-top fixed-top navbar-expand ${darkMode ? 'dark-mode' : ''}`} id="navbarDefault">
+
   <div className="collapse navbar-collapse justify-content-between">
     <div className="navbar-logo">
       <button
@@ -75,265 +91,7 @@ const Header = () => {
       >
         <button className="btn btn-link p-0" aria-label="Close" />
       </div>
-      <div className="dropdown-menu border start-0 py-0 overflow-hidden w-100">
-        <div className="scrollbar-overlay" style={{ maxHeight: "30rem" }}>
-          <div className="list pb-3">
-            <h6 className="dropdown-header text-body-highlight fs-10 py-2">
-              24 <span className="text-body-quaternary">results</span>
-            </h6>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Recently Searched{" "}
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    <span
-                      className="fa-solid fa-clock-rotate-left"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Store Macbook
-                  </div>
-                </div>
-              </a>
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    {" "}
-                    <span
-                      className="fa-solid fa-clock-rotate-left"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    MacBook Air - 13″
-                  </div>
-                </div>
-              </a>
-            </div>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Products
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item py-2 d-flex align-items-center"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="file-thumbnail me-2">
-                  <img
-                    className="h-100 w-100 fit-cover rounded-3"
-                    src="assets/img/products/60x60/3.png"
-                    alt=""
-                  />
-                </div>
-                <div className="flex-1">
-                  <h6 className="mb-0 text-body-highlight title">
-                    MacBook Air - 13″
-                  </h6>
-                  <p className="fs-10 mb-0 d-flex text-body-tertiary">
-                    <span className="fw-medium text-body-tertiary text-opactity-85">
-                      8GB Memory - 1.6GHz - 128GB Storage
-                    </span>
-                  </p>
-                </div>
-              </a>
-              <a
-                className="dropdown-item py-2 d-flex align-items-center"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="file-thumbnail me-2">
-                  <img
-                    className="img-fluid"
-                    src="assets/img/products/60x60/3.png"
-                    alt=""
-                  />
-                </div>
-                <div className="flex-1">
-                  <h6 className="mb-0 text-body-highlight title">
-                    MacBook Pro - 13″
-                  </h6>
-                  <p className="fs-10 mb-0 d-flex text-body-tertiary">
-                    <span className="fw-medium text-body-tertiary text-opactity-85 ms-2">
-                      30 Sep at 12:30 PM
-                    </span>
-                  </p>
-                </div>
-              </a>
-            </div>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Quick Links
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    <span
-                      className="fa-solid fa-link text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Support MacBook House
-                  </div>
-                </div>
-              </a>
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    {" "}
-                    <span
-                      className="fa-solid fa-link text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Store MacBook″
-                  </div>
-                </div>
-              </a>
-            </div>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Files
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    <span
-                      className="fa-solid fa-file-zipper text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Library MacBook folder.rar
-                  </div>
-                </div>
-              </a>
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    {" "}
-                    <span
-                      className="fa-solid fa-file-lines text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Feature MacBook extensions.txt
-                  </div>
-                </div>
-              </a>
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    {" "}
-                    <span
-                      className="fa-solid fa-image text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    MacBook Pro_13.jpg
-                  </div>
-                </div>
-              </a>
-            </div>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Members
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item py-2 d-flex align-items-center"
-                href="pages/members.html"
-              >
-                <div className="avatar avatar-l status-online  me-2 text-body">
-                  <img
-                    className="rounded-circle "
-                    src="assets/img/team/40x40/10.webp"
-                    alt=""
-                  />
-                </div>
-                <div className="flex-1">
-                  <h6 className="mb-0 text-body-highlight title">Carry Anna</h6>
-                  <p className="fs-10 mb-0 d-flex text-body-tertiary">
-                    anna@technext.it
-                  </p>
-                </div>
-              </a>
-              <a
-                className="dropdown-item py-2 d-flex align-items-center"
-                href="pages/members.html"
-              >
-                <div className="avatar avatar-l  me-2 text-body">
-                  <img
-                    className="rounded-circle "
-                    src="assets/img/team/40x40/12.webp"
-                    alt=""
-                  />
-                </div>
-                <div className="flex-1">
-                  <h6 className="mb-0 text-body-highlight title">John Smith</h6>
-                  <p className="fs-10 mb-0 d-flex text-body-tertiary">
-                    smith@technext.it
-                  </p>
-                </div>
-              </a>
-            </div>
-            <hr className="my-0" />
-            <h6 className="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">
-              Related Searches
-            </h6>
-            <div className="py-2">
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    <span
-                      className="fa-brands fa-firefox-browser text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Search in the Web MacBook
-                  </div>
-                </div>
-              </a>
-              <a
-                className="dropdown-item"
-                href="apps/e-commerce/landing/product-details.html"
-              >
-                <div className="d-flex align-items-center">
-                  <div className="fw-normal text-body-highlight title">
-                    {" "}
-                    <span
-                      className="fa-brands fa-chrome text-body"
-                      data-fa-transform="shrink-2"
-                    />{" "}
-                    Store MacBook″
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-          <div className="text-center">
-            <p className="fallback fw-bold fs-7 d-none">No Result Found.</p>
-          </div>
-        </div>
-      </div>
+   
     </div>
     <ul className="navbar-nav navbar-nav-icons flex-row">
       <li className="nav-item">
@@ -385,306 +143,7 @@ const Header = () => {
           id="navbarDropdownNotfication"
           aria-labelledby="navbarDropdownNotfication"
         >
-          <div className="card position-relative border-0">
-            <div className="card-header p-2">
-              <div className="d-flex justify-content-between">
-                <h5 className="text-body-emphasis mb-0">Notificatons</h5>
-                <button
-                  className="btn btn-link p-0 fs-9 fw-normal"
-                  type="button"
-                >
-                  Mark all as read
-                </button>
-              </div>
-            </div>
-            <div className="card-body p-0">
-              <div className="scrollbar-overlay" style={{ height: "27rem" }}>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <img
-                          className="rounded-circle"
-                          src="assets/img/team/40x40/30.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">
-                          Jessie Samson
-                        </h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">💬</span>Mentioned you in
-                          a comment.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">
-                            10m
-                          </span>
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">10:41 AM </span>August
-                          7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <div className="avatar-name rounded-circle">
-                          <span>J</span>
-                        </div>
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">Jane Foster</h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">📅</span>Created an
-                          event.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">
-                            20m
-                          </span>
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">10:20 AM </span>August
-                          7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <img
-                          className="rounded-circle avatar-placeholder"
-                          src="assets/img/team/40x40/avatar.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">
-                          Jessie Samson
-                        </h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">👍</span>Liked your
-                          comment.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">
-                            1h
-                          </span>
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">9:30 AM </span>August 7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <img
-                          className="rounded-circle"
-                          src="assets/img/team/40x40/57.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">
-                          Kiera Anderson
-                        </h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">💬</span>Mentioned you in
-                          a comment.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10" />
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">9:11 AM </span>August 7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <img
-                          className="rounded-circle"
-                          src="assets/img/team/40x40/59.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">
-                          Herman Carter
-                        </h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">👤</span>Tagged you in a
-                          comment.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10" />
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">10:58 PM </span>August
-                          7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 px-sm-3 py-3 notification-card position-relative read ">
-                  <div className="d-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex">
-                      <div className="avatar avatar-m status-online me-3">
-                        <img
-                          className="rounded-circle"
-                          src="assets/img/team/40x40/58.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex-1 me-sm-3">
-                        <h4 className="fs-9 text-body-emphasis">
-                          Benjamin Button
-                        </h4>
-                        <p className="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal">
-                          <span className="me-1 fs-10">👍</span>Liked your
-                          comment.
-                          <span className="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10" />
-                        </p>
-                        <p className="text-body-secondary fs-9 mb-0">
-                          <span className="me-1 fas fa-clock" />
-                          <span className="fw-bold">10:18 AM </span>August
-                          7,2021
-                        </p>
-                      </div>
-                    </div>
-                    <div className="d-none d-sm-block">
-                      <button
-                        className="btn fs-10 btn-sm dropdown-toggle dropdown-caret-none transition-none notification-dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-boundary="window"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        data-bs-reference="parent"
-                      >
-                        <span className="fas fa-ellipsis-h fs-10 text-body" />
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end py-2">
-                        <a className="dropdown-item" href="#!">
-                          Mark as unread
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card-footer p-0 border-top border-translucent border-0">
-              <div className="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85">
-                <a className="fw-bolder" href="pages/notifications.html">
-                  Notification history
-                </a>
-              </div>
-            </div>
-          </div>
+ 
         </div>
       </li>
       <li className="nav-item dropdown">
@@ -701,226 +160,7 @@ const Header = () => {
                 <circle cx="14" cy="2" r="1.7" fill="currentColor"></circle>
             </svg>
         </a>
-        <div
-          className="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-nine-dots shadow border"
-          aria-labelledby="navbarDropdownNindeDots"
-        >
-          <div className="card bg-body-emphasis position-relative border-0">
-            <div
-              className="card-body pt-3 px-3 pb-0 overflow-auto scrollbar"
-              style={{ height: "20rem" }}
-            >
-              <div className="row text-center align-items-center gx-0 gy-0">
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/behance.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Behance
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/google-cloud.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Cloud
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/slack.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Slack
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/gitlab.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Gitlab
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/bitbucket.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      BitBucket
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/google-drive.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Drive
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/trello.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Trello
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/figma.webp"
-                      alt=""
-                      width={20}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Figma
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/twitter.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Twitter
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/pinterest.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Pinterest
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img src="assets/img/nav-icons/ln.webp" alt="" width={30} />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Linkedin
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/google-maps.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Maps
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/google-photos.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Photos
-                    </p>
-                  </a>
-                </div>
-                <div className="col-4">
-                  <a
-                    className="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3"
-                    href="#!"
-                  >
-                    <img
-                      src="assets/img/nav-icons/spotify.webp"
-                      alt=""
-                      width={30}
-                    />
-                    <p className="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">
-                      Spotify
-                    </p>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </li>
       <li className="nav-item dropdown">
         <a
@@ -955,7 +195,7 @@ const Header = () => {
                     alt=""
                   />
                 </div>
-                <h6 className="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                <h6 className="mt-2 text-body-emphasis">{user.profile.firstname} {user.profile.lastname}</h6>
               </div>
               <div className="mb-3 mx-3">
                 <input
@@ -972,7 +212,7 @@ const Header = () => {
             >
               <ul className="nav d-flex flex-column mb-2 pb-1">
                 <li className="nav-item">
-                  <a className="nav-link px-3" href="#!">
+                  <a className="nav-link px-3" href="/myProfile">
                     {" "}
                     <span className="me-2 text-body" data-feather="user" />
                     <span>Profile</span>

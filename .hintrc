@@ -26,7 +26,8 @@
       "default",
       {
         "aria-required-children": "off",
-        "aria-required-parent": "off"
+        "aria-required-parent": "off",
+        "aria-valid-attr-value": "off"
       }
     ],
     "disown-opener": "off",
@@ -40,6 +41,7 @@
         ]
       }
     ],
-    "no-inline-styles": "off"
+    "no-inline-styles": "off",
+    "button-type": "off"
   }
 }

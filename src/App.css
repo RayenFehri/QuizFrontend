@@ -1,3 +1,41 @@
+
+.contenta{
+
+    display : grid;
+    place-items: center;
+  }
+  
+  /* .cont{
+    display: grid;
+    place-items:center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+  } */
+  .donut-chart-container rect{
+    fill : none;
+  }
+  .donut-chart-container .-legend-item{
+    display: none; /* Hide the legend */
+  }
+  
+  .donut-chart-container text{
+   
+    fill:white;
+   
+  }
+  
+  
+  
+  .grid-container {
+    display : grid;
+    place-items: center;
+    width : 100%;
+  }
+
+
+
+
 :root,
 [data-bs-theme=light] {
     --phoenix-blue: #3874ff;
@@ -28061,7 +28099,7 @@ html {
     min-height: 100vh;
     padding: calc(var(--phoenix-navbar-top-height) + 2rem) 1.5rem 6.375rem 1.5rem;
     padding-bottom: 6rem;
-    width: 1200px;
+    min-width: 1200px;
 }
 
 @media(min-width: 576px) {
