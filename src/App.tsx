@@ -69,7 +69,7 @@ function AppContent() {
           <Route path="/listManagers" element={<ListManager onTotalManagersChange={function (total: number): void {
           throw new Error('Function not implemented.');
         } } />} /> {/* it works */}
-          <Route path="/editManager" element={<EditManager />} /> {/* it works */}
+          <Route path="/editManager/:id" element={<EditManager />} /> {/* it works */}
           {/* <Route path="/calendar" element={<Calendar />} /> */}
           <Route path="/profileEmployee/:id" element={<ProfileEmployee />} /> {/* it works */}
           <Route path="/profileManager" element={<ProfileManager />} /> {/* it works */}

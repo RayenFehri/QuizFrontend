@@ -58,24 +58,7 @@ const Login = () => {
                       Give yourself some hassle-free development process with the
                       uniqueness of Phoenix!
                     </p>
-                    <ul className="list-unstyled mb-0 w-max-content w-md-auto">
-                      <li className="d-flex align-items-center">
-                        <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#3fb030" }} className='text-success me-2' />
-                        <span className="text-body-tertiary fw-semibold">Fast</span>
-                      </li>
-                      <li className="d-flex align-items-center">
-                        <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#3fb030" }} className='text-success me-2' />
-                        <span className="text-body-tertiary fw-semibold">
-                          Simple
-                        </span>
-                      </li>
-                      <li className="d-flex align-items-center">
-                        <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#3fb030" }} className='text-success me-2' />
-                        <span className="text-body-tertiary fw-semibold">
-                          Responsive
-                        </span>
-                      </li>
-                    </ul>
+                    
                   </div>
                   <div className="position-relative z-n1 mb-6 d-none d-md-block text-center mt-md-15">
                     <img
@@ -149,7 +132,7 @@ const Login = () => {
                       </div>
                       {error && <p style={{ color: 'red' }}>{error}</p>}
                       <div className="row flex-between-center mb-7">
-                        <div className="col-auto">
+                        {/* <div className="col-auto">
                           <div className="form-check mb-0">
                             <input
                               className="form-check-input"
@@ -163,12 +146,12 @@ const Login = () => {
                               Remember me
                             </label>
                           </div>
-                        </div>
-                        <div className="col-auto">
+                        </div> */}
+                        {/* <div className="col-auto">
                           <a className="fs-9 fw-semibold" href="forgot-password.html">
                             Forgot Password?
                           </a>
-                        </div>
+                        </div> */}
                       </div>
                       <button className="btn btn-primary w-100 mb-3">Sign In</button>
                     </form>
