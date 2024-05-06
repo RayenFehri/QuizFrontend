@@ -1,5 +1,5 @@
 import React from "react";
-const AddEmployee = () => {
+const Employee = () => {
 
     return (
         <>
@@ -1885,4 +1885,4 @@ const AddEmployee = () => {
 
 }
 
-export default AddEmployee;
+export default Employee;

@@ -53,8 +53,8 @@ const CreateGroup= () => {
     return (
     <>
      
-    <div className="content col-md-10 ">
-  <nav className="mb-2 " aria-label="breadcrumb">
+    <div className="content">
+  <nav className="mb-2" aria-label="breadcrumb">
     <ol className="breadcrumb mb-0">
       <li className="breadcrumb-item">
         <a href="#!">Page 1</a>

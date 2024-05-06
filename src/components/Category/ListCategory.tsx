@@ -53,7 +53,7 @@ const ListCategories = () => {
   };
     return (
         <>
-<div className="content col-md-10"> 
+<div className="content"> 
   <div className="">
     {/* ----------------------- Little Navbar (page1 page2 default)-----------------*- */}
     <nav className="mb-2"  aria-label="breadcrumb ">

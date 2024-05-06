@@ -4,6 +4,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { quiz } from "../../Types/quiz.type";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Home from "../Pages/Home/Home";
 
 const Quizes = () => {
   const [quizzes, setQuizzes] = useState<quiz[]>([]);
@@ -13,10 +14,10 @@ const Quizes = () => {
   const scrollPositionRef = useRef<number>(0); 
 
   useEffect(() => {
-    fetchCategories();
+    fetchQuizes();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchQuizes = async () => {
     try {
       const response = await axios.get('http://localhost:3000/quiz/findallQuizes');
       const quizzesData: quiz[] = response.data.map((item: any) => ({
@@ -62,7 +63,7 @@ const Quizes = () => {
 
     return (
         <>
-<div className="content col-md-10"> 
+<div className="content"> 
   <div className="">
     {/* ----------------------- Little Navbar (page1 page2 default)-----------------*- */}
     <nav className="mb-2"  aria-label="breadcrumb ">

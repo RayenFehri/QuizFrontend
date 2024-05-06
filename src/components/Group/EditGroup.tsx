@@ -11,7 +11,6 @@ const EditGroup= () => {
   const[groupHead, setGroupHead] = useState<string>('Testeur');
 
   const navigate = useNavigate();
-
   useEffect(() => {
     fetch(`http://localhost:3000/group/getOneGroup/${idgroup}`)
       .then((res) => res.json())
@@ -59,7 +58,7 @@ const EditGroup= () => {
     return (
     <>
      
-     <div className="content col-md-10 ">
+     <div className="content">
   <nav className="mb-2 " aria-label="breadcrumb">
     <ol className="breadcrumb mb-0">
       <li className="breadcrumb-item">

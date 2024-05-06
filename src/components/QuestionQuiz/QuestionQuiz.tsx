@@ -9,7 +9,7 @@ const QuestionQuiz = () => {
   const [formData, setFormData] = useState({
     id_quiz: "",
     question_content: "",
-    explantation: "",
+    explantation: "No explantation provided.",
     questiontype: "",
     answers: [{ content: "", iscorrect: false }],
   });
@@ -67,10 +67,11 @@ const QuestionQuiz = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+     
       const response = await axios.post(
         "http://localhost:3000/question/createQuestion",
         {
-          id_quiz: formData.id_quiz,
+          id_quiz: idquiz,
           question_content: formData.question_content,
           explantation: formData.explantation,
           questiontype: formData.questiontype,

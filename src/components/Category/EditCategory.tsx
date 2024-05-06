@@ -53,7 +53,7 @@ export function EditCategory () {
     return (
     <>
      
-    <div className="content col-md-10 ">
+    <div className="content">
   <nav className="mb-2 " aria-label="breadcrumb">
     <ol className="breadcrumb mb-0">
       <li className="breadcrumb-item">

@@ -68,7 +68,7 @@ const ChatBot = () => {
 
     return (
         <>
-            <div className="content col-md-10">
+            <div className="content">
                 <div className="chat d-flex phoenix-offcanvas-container pt-1 mt-n1 mb-9 ">
                 <div className="chat-content tab-content flex-1">
                     <div

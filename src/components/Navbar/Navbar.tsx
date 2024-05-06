@@ -15,6 +15,7 @@ import {
   faBuilding,
   faArrowRight,
   faArrowLeft,
+  faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
@@ -31,23 +32,23 @@ function Navbar() {
 
   return (
     <>
-      <nav className="navbar navbar-vertical navbar-expand-lg">
+      <nav className="navbar navbar-vertical navbar-expand-lg ">
         <div className="collapse navbar-collapse " id="navbarVerticalCollapse">
           {/* scrollbar removed*/}
-          <div className="navbar-vertical-content ">
-            <ul className="navbar-nav flex-column" id="navbarVerticalNav">
-              <li className="nav-item">
+          <div className="navbar-vertical-content">
+            <ul className="navbar-nav flex-column " id="navbarVerticalNav">
+              <li className="nav-item ">
                 {/* parent pages*/}
-                <div className="nav-item-wrapper">
+                <div className="nav-item-wrapper ">
                   <a
-                    className="nav-link dropdown-indicator label-1"
-                    href="/home"
+                    className="nav-link dropdown-indicator label-1 "
+                    href="/"
                     role="button"
                     data-bs-toggle=""
                     aria-expanded={false}
                     aria-controls="nv-home"
                   >
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center ">
                       <span className="nav-link-icon">
                         <FontAwesomeIcon icon={faHome} />{" "}
                         {/* Add the FontAwesome icon here */}
@@ -63,7 +64,7 @@ function Navbar() {
                 <p className="navbar-vertical-label">Managing</p>
                 <hr className="navbar-vertical-line" />
                 {/* parent pages*/}
-                <div className="nav-item-wrapper">
+                <div className="nav-item-wrapper ">
                   <a
                     className="nav-link dropdown-indicator label-1"
                     href="#nv-Group"
@@ -76,15 +77,12 @@ function Navbar() {
                       <div className="dropdown-indicator-icon">
                         <span className="fas fa-caret-right" />
                       </div>
-                      <span className="nav-link-icon">
+                      <span className="nav-link-icon ">
                         <FontAwesomeIcon icon={faBuilding} />{" "}
                         {/* Add the FontAwesome icon here */}
                       </span>
                       <span className="nav-link-text">Group</span>
-                      <span
-                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                        style={{ fontSize: 6 }}
-                      />
+                      
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -108,7 +106,7 @@ function Navbar() {
                         </a>
                         {/* more inner pages*/}
                       </li>
-                      <li className="nav-item">
+                      <li className="nav-item ">
                         <a
                           className="nav-link"
                           href="/creategroup"
@@ -146,10 +144,7 @@ function Navbar() {
                         {/* Add the FontAwesome icon here */}
                       </span>
                       <span className="nav-link-text">Manager</span>
-                      <span
-                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                        style={{ fontSize: 6 }}
-                      />
+                      
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -164,7 +159,7 @@ function Navbar() {
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          href="../apps/crm/analytics.html"
+                          href="/listManagers"
                           data-bs-toggle=""
                           aria-expanded="false"
                         >
@@ -178,7 +173,7 @@ function Navbar() {
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          href="/addEmployee"
+                          href="/addManager"
                           data-bs-toggle=""
                           aria-expanded="false"
                         >
@@ -212,10 +207,7 @@ function Navbar() {
                         <FontAwesomeIcon icon={faUser} />
                       </span>
                       <span className="nav-link-text">Employee</span>
-                      <span
-                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                        style={{ fontSize: 6 }}
-                      />
+                      
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -228,7 +220,7 @@ function Navbar() {
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          href="../apps/crm/analytics.html"
+                          href="/listEmployees"
                           data-bs-toggle=""
                           aria-expanded="false"
                         >
@@ -262,6 +254,7 @@ function Navbar() {
                     </ul>
                   </div>
                 </div>
+                
                 {/* parent pages*/}
                 <div className="nav-item-wrapper">
                   <a
@@ -280,10 +273,7 @@ function Navbar() {
                         <FontAwesomeIcon icon={faQuestion} />
                       </span>
                       <span className="nav-link-text">Quiz</span>
-                      <span
-                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                        style={{ fontSize: 6 }}
-                      />
+                      
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -337,6 +327,7 @@ function Navbar() {
                         </a>
                         {/* more inner pages*/}
                       </li>
+                      
                     </ul>
                   </div>
                 </div>
@@ -359,10 +350,7 @@ function Navbar() {
                         <FontAwesomeIcon icon={faLayerGroup} />
                       </span>
                       <span className="nav-link-text">Category</span>
-                      <span
-                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                        style={{ fontSize: 6 }}
-                      />
+                      
                     </div>
                   </a>
                   <div className="parent-wrapper label-1">
@@ -409,6 +397,53 @@ function Navbar() {
                     </ul>
                   </div>
                 </div>
+                {/* parent pages*/}
+          <div className="nav-item-wrapper">
+            <a
+              className="nav-link dropdown-indicator label-1"
+              href="#nv-kanban"
+              role="button"
+              data-bs-toggle="collapse"
+              aria-expanded="false"
+              aria-controls="nv-kanban"
+            >
+              <div className="d-flex align-items-center">
+                <div className="dropdown-indicator-icon">
+                  <span className="fas fa-caret-right" />
+                </div>
+                <span className="nav-link-icon">
+                <FontAwesomeIcon icon={faBookOpen} />                
+                </span>
+                <span className="nav-link-text">Reports</span>
+                
+              </div>
+            </a>
+            <div className="parent-wrapper label-1">
+              <ul
+                className="nav collapse parent"
+                data-bs-parent="#navbarVerticalCollapse"
+                id="nv-kanban"
+              >
+                <li className="collapsed-nav-item-title d-none">Kanban</li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    href="/listReport"
+                    data-bs-toggle=""
+                    aria-expanded="false"
+                  >
+                    <div className="d-flex align-items-center">
+                    <FontAwesomeIcon icon={faList} />
+                      <span className="nav-link-text">List Reports</span>
+                    </div>
+                  </a>
+                  {/* more inner pages*/}
+                </li>
+                
+               
+              </ul>
+            </div>
+          </div>
               </li>
             </ul>
           </div>
