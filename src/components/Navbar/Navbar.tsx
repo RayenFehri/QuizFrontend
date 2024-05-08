@@ -33,8 +33,7 @@ function Navbar() {
   return (
     <>
     
-<nav className="navbar navbar-vertical navbar-expand-lg "   
- >
+<nav className="navbar navbar-vertical navbar-expand-lg ">
 
   <div className="collapse navbar-collapse" id="navbarVerticalCollapse">
     {/* scrollbar removed*/}

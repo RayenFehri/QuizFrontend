@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { group } from '../../../Types/Group';
+import Swal from 'sweetalert2';
 
 const AddEmployee = () => {
   const [formData, setFormData] = useState({
@@ -19,12 +21,23 @@ const AddEmployee = () => {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
-
+  const [groups, setGroups] = useState<group[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<group[]>([]);
+  const [formErrors, setFormErrors] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    address: '',
+    phone: '',
+    birthdate: '',
+    joiningdate: '',
+    groupe: ''
+  });
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    
     if (e.target.type === 'file') {
-      
       const inputElement = e.target as HTMLInputElement;
       const file = inputElement.files && inputElement.files[0];
       if (file) {
@@ -32,31 +45,118 @@ const AddEmployee = () => {
         setFormData({ ...formData, [e.target.name]: imageUrl });
       }
     } else {
-      
       setFormData({ ...formData, [e.target.name]: e.target.value });
+      validateField(e.target.name, e.target.value);
     }
   };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const formDataWithRole = {
-        ...formData,
-        role:3, 
-      };
-      const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
-      console.log(response.data);
-      
-    } catch (error) {
-      console.error('Error:', error);
-      
+  
+    if (validateForm()) {
+      try {
+        const formDataWithRole = {
+          ...formData,
+          role: 3,
+        };
+        const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
+        console.log(response.data);
+  
+        // SweetAlert for successful submission
+        Swal.fire({
+          title: "Success!",
+          text: "New employee added successfully!",
+          icon: "success"
+        });
+  
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      console.error('Invalid form');
     }
   };
+  
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
 
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/group/getAllGroup"
+      ); 
+      const groupsData: group[] = response.data.map((item: any) => ({
+        idgroup: item.idgroup,
+        groupname: item.groupname,
+        grouplocation: item.grouplocation,
+        grouphead: item.grouphead,
+      }));
+      setGroups(groupsData);
+      setFilteredGroups(groupsData);
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+
+
+
+  //validation
+  const validateForm = () => {
+    let valid = true;
+    Object.values(formErrors).forEach((val) => {
+      val.length > 0 && (valid = false);
+    });
+    return valid;
+  };
+
+  const validateField = (fieldName: string, value: string) => {
+    let errors: any = { ...formErrors };
+  
+    switch (fieldName) {
+      case 'firstname':
+        errors.firstname = value.length < 3 ? 'First name must be at least 3 characters long' : '';
+        break;
+      case 'lastname':
+        errors.lastname = value.length < 3 ? 'Last name must be at least 3 characters long' : '';
+        break;
+      case 'email':
+        errors.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'Invalid email address' : '';
+        break;
+      case 'password':
+        errors.password = value.length < 6 ? 'Password must be at least 6 characters long' : '';
+        break;
+      case 'confirmPassword':
+        errors.confirmPassword = value !== formData.password ? 'Passwords do not match' : '';
+        break;
+      case 'address':
+        errors.address = value.trim() === '' ? 'Address is required' : '';
+        break;
+      case 'phone':
+        errors.phone = !/^\d{10}$/.test(value) ? 'Invalid phone number' : '';
+        break;
+      case 'birthdate':
+        errors.birthdate = value.trim() === '' ? 'Date of birth is required' : '';
+        break;
+      case 'joiningdate':
+        errors.joiningdate = value.trim() === '' ? 'Joining date is required' : '';
+        break;
+      case 'groupe':
+        errors.groupe = value.trim() === '' ? 'Group is required' : '';
+        break;
+      default:
+        break;
+    }
+  
+    setFormErrors(errors);
+  };
+  
+  
   return (
     <>
       <div className="content">
@@ -167,6 +267,9 @@ const AddEmployee = () => {
                                   placeholder="John "
                                   id="bootstrap-wizard-wizard-name"
                                 />
+                                 {formErrors.firstname.length > 0 && (
+                                  <small className="text-danger">{formErrors.firstname}</small>
+                                )}
                               </div>
                               <div className="col-sm-6">
                                 <label className="form-label text-body" htmlFor="bootstrap-wizard-wizard-name" >
@@ -181,6 +284,9 @@ const AddEmployee = () => {
                                   placeholder="Smith"
                                   id="bootstrap-wizard-wizard-name"
                                 />
+                                 {formErrors.lastname.length > 0 && (
+                                  <small className="text-danger">{formErrors.lastname}</small>
+                                )}
                               </div>
                             </div>
                             <div className="mb-2">
@@ -200,6 +306,9 @@ const AddEmployee = () => {
                                 pattern="^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$"
                                 id="bootstrap-wizard-wizard-email"
                               />
+                              {formErrors.email.length > 0 && (
+                                <small className="text-danger">{formErrors.email}</small>
+                              )}
                             </div>
                             <div className="row g-3 mb-3">
                               <div className="col-sm-6">
@@ -220,6 +329,9 @@ const AddEmployee = () => {
                                     onChange={handleChange}
                                     data-wizard-password="true"
                                   />
+                                  {formErrors.password.length > 0 && (
+                                    <small className="text-danger">{formErrors.password}</small>
+                                  )}
                                 </div>
                               </div>
                               <div className="col-sm-6">
@@ -237,25 +349,15 @@ const AddEmployee = () => {
                                     placeholder="Confirm Password"
                                     id="bootstrap-wizard-wizard-confirm-password"
                                     data-wizard-confirm-password="true"
+                                    onChange={handleChange}
                                   />
+                                   {formErrors.confirmPassword.length > 0 && (
+                                    <small className="text-danger">{formErrors.confirmPassword}</small>
+                                  )}
                                 </div>
                               </div>
                             </div>
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                name="terms"
-                                id="bootstrap-wizard-wizard-checkbox"
-                              />
-                              <label
-                                className="form-check-label text-body"
-                                htmlFor="bootstrap-wizard-wizard-checkbox"
-                              >
-                                I accept the <a href="#!">terms </a>and{" "}
-                                <a href="#!">privacy policy</a>
-                              </label>
-                            </div>
+                       
 
 
                           </div>
@@ -264,7 +366,7 @@ const AddEmployee = () => {
                             role="tabpanel"
                             aria-labelledby="bootstrap-wizard-tab2"
                             id="bootstrap-wizard-tab2"
-                          >
+                           >
 
                             <div
                               className="row g-4 mb-4"
@@ -279,8 +381,8 @@ const AddEmployee = () => {
                                   name="profilepicture"
                                   onChange={handleChange}
                                 />
-
-
+                                
+                              
                               </div>
                               <div className="col-md-auto">
                                 <div className="dz-preview dz-preview-single">
@@ -356,6 +458,9 @@ const AddEmployee = () => {
                                 onChange={handleChange}
                                 id="bootstrap-wizard-wizard-phone"
                               />
+                                                {formErrors.phone.length > 0 && (
+                                  <small className="text-danger">{formErrors.phone}</small>
+                                )}
                             </div>
                             <div className="mb-2">
                               <label
@@ -373,6 +478,9 @@ const AddEmployee = () => {
                                 placeholder="d/m/y"
                                 id="bootstrap-wizard-wizard-datepicker"
                               />
+                                                {formErrors.birthdate.length > 0 && (
+                                  <small className="text-danger">{formErrors.birthdate}</small>
+                                )}
 
                             </div>
                             <div className="mb-2">
@@ -391,26 +499,31 @@ const AddEmployee = () => {
                                 placeholder="d/m/y"
                                 id="bootstrap-wizard-wizard-datepicker"
                               />
-
+                                                {formErrors.joiningdate.length > 0 && (
+                                  <small className="text-danger">{formErrors.joiningdate}</small>
+                                )}
                             </div>
                             <div className="mb-2">
-                              <label
-                                className="form-label"
-                                htmlFor="bootstrap-wizard-wizard-datepicker"
-                              >
-                                Groupe
-                              </label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                name="groupe"
-                                value={formData.groupe}
-                                onChange={handleChange}
-                                placeholder="groupe"
-                                id="bootstrap-wizard-wizard-datepicker"
-                              />
+  <label className="form-label" htmlFor="bootstrap-wizard-wizard-select-group">
+    Group Name
+  </label>
+  <select
+    className="form-select"
+    name="groupe"
+    value={formData.groupe}
+    onChange={handleChange}
+    id="bootstrap-wizard-wizard-select-group"
+  >
+    <option value="">Select Group</option>
+    {filteredGroups.map(group => (
+      <option key={group.idgroup} value={group.groupname}>{group.groupname}</option>
+    ))}
+  </select>
+  {formErrors.groupe.length > 0 && (
+                                  <small className="text-danger">{formErrors.groupe}</small>
+                                )}
+</div>
 
-                            </div>
                             <div className="mb-2">
                               <label
                                 className="form-label"
@@ -427,6 +540,9 @@ const AddEmployee = () => {
                                 id="bootstrap-wizard-wizard-address"
 
                               />
+                                                {formErrors.address.length > 0 && (
+                                  <small className="text-danger">{formErrors.address}</small>
+                                )}
                             </div>
                           </div>
                           <div
@@ -454,18 +570,13 @@ const AddEmployee = () => {
                               </div>
                               <div className="col-12 col-sm-auto">
                                 <div className="text-center text-sm-start">
-                                  <h5 className="mb-3">You are all set!</h5>
+                                  <h5 className="mb-3"></h5>
                                   <p className="text-body-emphasis fs-9">
-                                    Now you can access your account
+                                    
                                     <br />
-                                    anytime anywhere
+                                    
                                   </p>
-                                  <a
-                                    className="btn btn-primary px-6"
-                                    href="wizard.html"
-                                  >
-                                    Start Over
-                                  </a>
+                                
                                 </div>
                               </div>
                             </div>

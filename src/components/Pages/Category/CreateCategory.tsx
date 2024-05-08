@@ -1,12 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUserId } from '../../../Services/Auth/auth.service';
 
-
+const iduser = getCurrentUserId();
+console.log(iduser)
 
 const CreateCategory= () => {
   const [formData, setFormData] = useState({
-    id:'42d97d8d-4452-4996-88b3-dff14612502b',
+    id:iduser,
     categoryname: '',
 
   });

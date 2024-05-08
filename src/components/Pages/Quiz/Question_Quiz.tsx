@@ -7,7 +7,7 @@ import axios from "axios";
 import { quiz } from "../../../Types/Quiz.type";
 import { useParams } from "react-router-dom";
 
-const QuestionQuiz = () => {
+const Question_Quiz = () => {
   const [formData, setFormData] = useState({
     id_quiz:'',
     question_content: '',
@@ -295,7 +295,7 @@ const addOption = () => {
 };
   
 
-export default QuestionQuiz;
+export default Question_Quiz;
 
 
 

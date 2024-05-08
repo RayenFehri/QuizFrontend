@@ -15,11 +15,9 @@ import Footer from './components/Footer/Footer';
 import ProfileEmployee from './components/Pages/Employee/ProfileEmployee';
 import ProfileManager from './components/Pages/Manager/ProfileManager';
 import { ListEmployees } from './components/Pages/Employee/ListEmployees';
-import QuestionQuiz from './components/Pages/Quiz/Question_Quiz';
 import SendEmailComponent from './components/Email/SendEmail';
 import { AuthProvider } from './Services/Auth/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
-import { ListGroup } from 'react-bootstrap';
 import CreateCategory from './components/Pages/Category/CreateCategory';
 import { EditCategory } from './components/Pages/Category/EditCategory';
 import ListCategories from './components/Pages/Category/ListCategory';
@@ -32,6 +30,9 @@ import Quizes from './components/Pages/Quiz/ListQuiz';
 import ListReport from './components/Pages/Reports/ListReport';
 import ReportDetail from './components/Pages/Reports/ReportDetail';
 import ProfileUserSignIn from './components/Pages/Login/ProfileUserSignIn';
+import SendQuizComponent from './components/Email/SendQuiz';
+import ListGroup from './components/Pages/Group/ListGroup';
+import QuestionQuiz from './components/Pages/QuestionsQuiz/QuestionQuiz';
 
 function App() {
   return (
@@ -90,8 +91,9 @@ function AppContent() {
           <Route path="/questionquiz/:idquiz" element={<QuestionQuiz/>} />
           <Route path="/listquiz" element={<Quizes/>} />
           <Route path="/listReport" element={<ListReport/>} />
-          <Route path="/reportDetail" element={<ReportDetail/>} />
+          <Route path="/reportDetail/:id" element={<ReportDetail/>} />
           <Route path="/myProfile" element={<ProfileUserSignIn />} />
+          <Route path="/sendQuiz" element={<SendQuizComponent />} />
 
 
 

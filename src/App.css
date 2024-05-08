@@ -32183,10 +32183,10 @@ html:not(.navbar-vertical-collapsed) .navbar-vertical.navbar-expand-xs .navbar-v
 }
 
 .navbar-vertical .navbar-vertical-content .nav-link-icon {
-    margin-left: .625rem;
+    margin-left: .0rem;
     min-width: 16px !important;
     text-align: center
-}
+  }
 
 .navbar-vertical .navbar-vertical-content .nav-link-text {
     padding-top: .125rem
