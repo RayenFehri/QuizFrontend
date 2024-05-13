@@ -18,6 +18,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { group } from "../../../Types/Group";
+import Swal from "sweetalert2";
 
 const ListGroup = () => {
   const [groups, setGroups] = useState<group[]>([]);
@@ -52,23 +53,49 @@ const ListGroup = () => {
   };
   const handleRemoveGroup = async (idgroup: string) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/group/deleteGroup/${idgroup}`
-      );
-      if (response.status === 200) {
-        // Remove the category from the list
-        setGroups(groups.filter((grp) => grp.idgroup !== idgroup));
-        setFilteredGroups(
-          filteredGroups.filter((grp) => grp.idgroup !== idgroup)
+      const confirmDelete = await Swal.fire({
+        title: `Are you sure?`,
+        text: `You won't be able to revert this!`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      });
+  
+      if (confirmDelete.isConfirmed) {
+        const response = await axios.delete(
+          `http://localhost:3000/group/deleteGroup/${idgroup}`
         );
-        console.log("Group removed successfully!");
-      } else {
-        console.error("Error removing group");
+  
+        if (response.status === 200) {
+          // Remove the category from the list
+          setGroups(groups.filter((grp) => grp.idgroup !== idgroup));
+          setFilteredGroups(
+            filteredGroups.filter((grp) => grp.idgroup !== idgroup)
+          );
+          console.log("Group removed successfully!");
+  
+          await Swal.fire({
+            title: "Deleted!",
+            text: "Group has been deleted.",
+            icon: "success",
+          });
+        } else {
+          console.error("Error removing group");
+        }
+      } else if (confirmDelete.dismiss === Swal.DismissReason.cancel) {
+        await Swal.fire({
+          title: "Cancelled",
+          text: `Action cancelled.`,
+          icon: "error",
+        });
       }
     } catch (error) {
       console.error("Unexpected error removing group:", error);
     }
   };
+  
   return (
     <>
       <div className="content">
@@ -195,13 +222,7 @@ const ListGroup = () => {
                               <span className="fas fa-ellipsis-h fs-10" />
                             </button>
                             <div className="dropdown-menu dropdown-menu-end py-2">
-                              <a className="dropdown-item" href="#!">
-                                <FontAwesomeIcon
-                                  className="ms-4"
-                                  icon={faEye}
-                                />
-                                View
-                              </a>
+                              
                               <Link
                                 className="dropdown-item"
                                 to={`/editgroup/${group.idgroup}`}

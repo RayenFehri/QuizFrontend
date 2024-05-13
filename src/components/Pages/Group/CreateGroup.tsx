@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { group } from "../../../Types/Group";
 import { User } from "../../../Types/User.type";
+import Swal from "sweetalert2";
 
 const CreateGroup = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -39,7 +39,7 @@ const CreateGroup = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -51,13 +51,21 @@ const CreateGroup = () => {
         formData
       );
       navigate("/listgroup");
-
-      console.log(response.data);
       
-      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+      console.log(response.data);
+
+      await Swal.fire({
+        title: "Group Created!",
+        text: "Group has been created successfully.",
+        icon: "success",
+      });
     } catch (error) {
       console.error("Error:", error);
-      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to create group. Please try again.",
+        icon: "error",
+      });
     }
   };
 
@@ -89,6 +97,7 @@ const CreateGroup = () => {
                     name="groupname"
                     value={formData.groupname}
                     onChange={handleChange}
+                    required
                   />
                   <label htmlFor="floatingInputGrid">Group name</label>
                 </div>
@@ -101,6 +110,7 @@ const CreateGroup = () => {
                     name="grouphead"
                     value={formData.grouphead}
                     onChange={handleChange}
+                    required
                   >
                     <option value="">Select Group Head</option>
                     {users.map((user) => (
@@ -122,6 +132,7 @@ const CreateGroup = () => {
                     name="grouplocation"
                     value={formData.grouplocation}
                     onChange={handleChange}
+                    required
                   />
                   <label htmlFor="floatingInputBudget">Location</label>
                 </div>

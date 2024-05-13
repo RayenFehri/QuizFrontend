@@ -191,7 +191,7 @@ function Navbar() {
                       data-bs-parent="#navbarVerticalCollapse"
                       id="nv-email"
                     >
-                      <li className="collapsed-nav-item-title d-none">Email</li>
+                      <li className="collapsed-nav-item-title d-none">Quiz</li>
                       <li className="nav-item">
                         <a
                           className="nav-link"
@@ -396,7 +396,7 @@ function Navbar() {
                       data-bs-parent="#navbarVerticalCollapse"
                       id="nv-kanban"
                     >
-                      <li className="collapsed-nav-item-title d-none">Kanban</li>
+                      <li className="collapsed-nav-item-title d-none">Reports</li>
                       <li className="nav-item">
                         <a
                           className="nav-link"
@@ -410,35 +410,8 @@ function Navbar() {
                         </a>
                         {/* more inner pages*/}
                       </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link"
-                          href="../apps/kanban/boards.html"
-                          data-bs-toggle=""
-                          aria-expanded="false"
-                        >
-                          <div className="d-flex align-items-center">
-                            <span className="nav-link-text">Boards</span>
-                            <span className="badge ms-2 badge badge-phoenix badge-phoenix-info ">
-                              New
-                            </span>
-                          </div>
-                        </a>
-                        {/* more inner pages*/}
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link"
-                          href="../apps/kanban/create-kanban-board.html"
-                          data-bs-toggle=""
-                          aria-expanded="false"
-                        >
-                          <div className="d-flex align-items-center">
-                            <span className="nav-link-text">Create board</span>
-                          </div>
-                        </a>
-                        {/* more inner pages*/}
-                      </li>
+                     
+                      
                     </ul>
                   </div>
                 </div>

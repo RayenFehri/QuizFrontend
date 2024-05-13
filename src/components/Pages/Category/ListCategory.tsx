@@ -1,15 +1,13 @@
 import { faHome , faListAlt , faPlusSquare, faQuestion , faUser ,faUserShield ,faUserPlus, faList, faLayerGroup, faTrash, faTrashAlt, faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import {category} from '../../../Types/Category.type'
-import axios from 'axios';
-import { Link } from 'react-router-dom'
+import {category} from '../../../Types/Category.type';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const ListCategories = () => {
   const [categories, setCategories] = useState<category[]>([]);
   const [filteredCategories, setFilteredCategories] = useState<category[]>([]);
-  const scrollPositionRef = useRef<number>(0); 
-
   
   useEffect(() => {
     fetchCategories();
@@ -17,12 +15,11 @@ const ListCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/category/findallCategories');
-      const categoriesData: category[] = response.data.map((item: any) => ({
-        id:item.id,
-        categoryname: item.categoryname,
-        idcategory: item.idcategory,
-      }));
+      const response = await fetch('http://localhost:3000/category/findallCategories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      const categoriesData: category[] = await response.json();
       setCategories(categoriesData);
       setFilteredCategories(categoriesData);
     } catch (error) {
@@ -40,19 +37,47 @@ const ListCategories = () => {
   };
   const handleRemoveCategory = async (idcategory: string) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/category/deleteCategory/${idcategory}`);
-      if (response.status === 200) {
-        // Remove the category from the list
-        setCategories(categories.filter((cat) => cat.idcategory !== idcategory));
-        setFilteredCategories(filteredCategories.filter((cat) => cat.idcategory !== idcategory));
-        console.log('Category removed successfully!');
-      } else {
-        console.error('Error removing category');
+      const confirmDelete = await Swal.fire({
+        title: `Are you sure?`,
+        text: `You won't be able to revert this!`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      });
+  
+      if (confirmDelete.isConfirmed) {
+        const response = await fetch(`http://localhost:3000/category/deleteCategory/${idcategory}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          // Remove the category from the list
+          setCategories(categories.filter((cat) => cat.idcategory !== idcategory));
+          setFilteredCategories(filteredCategories.filter((cat) => cat.idcategory !== idcategory));
+          console.log('Category removed successfully!');
+  
+          await Swal.fire({
+            title: "Deleted!",
+            text: "Category has been deleted.",
+            icon: "success",
+          });
+        } else {
+          console.error('Error removing category');
+        }
+      } else if (confirmDelete.dismiss === Swal.DismissReason.cancel) {
+        await Swal.fire({
+          title: "Cancelled",
+          text: `Action cancelled.`,
+          icon: "error",
+        });
       }
     } catch (error) {
       console.error('Unexpected error removing category:', error);
     }
   };
+
     return (
         <>
 <div className="content col-md-10"> 
@@ -174,12 +199,7 @@ const ListCategories = () => {
                       <span className="fas fa-ellipsis-h fs-10" />
                     </button>
                     <div className="dropdown-menu dropdown-menu-end py-2">
-                      <a className="dropdown-item" href="#!">
-                      <FontAwesomeIcon className='ms-4' icon={faEye} /> 
-                        View
-                        
 
-                      </a>
                       <Link className="dropdown-item" to={`/editcategory/${category.idcategory}`}>
                       <FontAwesomeIcon className='ms-4' icon={faEdit} /> 
 

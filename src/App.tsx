@@ -74,17 +74,16 @@ function AppContent() {
           <Route path="/listManagers" element={<ListManager onTotalManagersChange={function (total: number): void {
           throw new Error('Function not implemented.');
         } } />} />
-          <Route path="/editManager" element={<EditManager />} />
+          <Route path="/editManager/:id" element={<EditManager />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profileEmployee/:id" element={<ProfileEmployee />} />
           <Route path="/profileManager/:id" element={<ProfileManager />} />
-          {/* <Route path="/questionQuiz" element={<QuestionQuiz />} /> */}
           <Route path="/sendEmail" element={<SendEmailComponent />} />
           <Route path="/creategroup" element={<CreateGroup/>} />
-          <Route path="/editgroup" element={<EditGroup/>} />
+          <Route path="/editgroup/:idgroup" element={<EditGroup/>} /> 
           <Route path="/listgroup" element={<ListGroup/>} />
           <Route path="/chatbot" element={<ChatBot/>} />
-          <Route path="/editcategory/:idcategory" element={<EditCategory/>} />
+          <Route path="/editcategory/:idcategory" element={<EditCategory/>} /> 
           <Route path="/editquiz/:idquiz" element={<EditQuiz/>} />
           <Route path="/listcategory" element={<ListCategories/>}/>
           <Route path="/createcategory" element={<CreateCategory/>}/>

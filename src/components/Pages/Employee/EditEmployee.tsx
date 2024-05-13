@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Col, Row } from 'react-bootstrap';
@@ -7,7 +6,6 @@ import { User } from '../../../Types/User.type';
 import axios from 'axios';
 import { group } from '../../../Types/Group';
 import Swal from 'sweetalert2';
-
 
 export function EditEmployee() {
   const startDateRef = useRef<HTMLInputElement>(null); // Référence au champ de date
@@ -51,9 +49,6 @@ export function EditEmployee() {
     }
   };
 
-
-
-
   useEffect(() => {
     fetch(`http://localhost:3000/user/getuser/${id}`)
       .then((res) => res.json())
@@ -80,75 +75,74 @@ export function EditEmployee() {
     return <div>Loading...</div>;
   }
 
-
-
   const handleUpdate = async (e:any) => {
     e.preventDefault(); // Empêche le rafraîchissement de la page par défaut du formulaire
 
-  // Vérifier les champs requis
-  if (!email || !firstname || !lastname || !phone || !birthdate || !joiningdate || !address || !groupe || !profilepicture || !password) {
-    Swal.fire({
-      title: "Error!",
-      text: "Please fill in all the required fields.",
-      icon: "error"
-    });
-    return;
-  }
-
-  // Vérifier si les dates sont au format valide
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(birthdate) || !dateRegex.test(joiningdate)) {
-    Swal.fire({
-      title: "Error!",
-      text: "Please provide valid date formats (YYYY-MM-DD).",
-      icon: "error"
-    });
-    return;
-  }
-
-  try {
-    const response = await fetch(`http://localhost:3000/user/updateuser/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        firstname,
-        lastname,
-        phone,
-        birthdate,
-        joiningdate,
-        address,
-        groupe,
-        profilepicture,
-        password
-      }),
-    });
-
-    if (response.ok) {
-      Swal.fire({
-        title: "Success!",
-        text: "User updated successfully!",
-        icon: "success"
-      });
-    } else {
+    // Vérifier les champs requis
+    if (!email || !firstname || !lastname || !phone || !birthdate || !joiningdate || !address || !groupe || !profilepicture || !password) {
       Swal.fire({
         title: "Error!",
-        text: "Error updating user",
+        text: "Please fill in all the required fields.",
+        icon: "error"
+      });
+      return;
+    }
+
+    // Vérifier si les dates sont au format valide
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(birthdate) || !dateRegex.test(joiningdate)) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please provide valid date formats (YYYY-MM-DD).",
+        icon: "error"
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/user/updateuser/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          firstname,
+          lastname,
+          phone,
+          birthdate,
+          joiningdate,
+          address,
+          groupe,
+          profilepicture,
+          password
+        }),
+      });
+
+      if (response.ok) {
+        Swal.fire({
+          title: "Success!",
+          text: "User updated successfully!",
+          icon: "success"
+        }).then(() => {
+          navigate('/listEmployees'); // Naviguer vers la liste des employés après la mise à jour
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Error updating user",
+          icon: "error"
+        });
+      }
+    } catch (error) {
+      console.error('Unexpected error updating user:', error);
+      Swal.fire({
+        title: "Error!",
+        text: "Unexpected error occurred while updating user",
         icon: "error"
       });
     }
-  } catch (error) {
-    console.error('Unexpected error updating user:', error);
-    Swal.fire({
-      title: "Error!",
-      text: "Unexpected error occurred while updating user",
-      icon: "error"
-    });
-  }
-};
-
+  };
 
 
 

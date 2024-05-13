@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { category } from '../../../Types/Category.type';
+import Swal from 'sweetalert2';
 
 
 const CreateQuiz= () => {
@@ -14,7 +15,7 @@ const CreateQuiz= () => {
     noofinvitations:'',
     difficultylevel:'',
     noofquestions:'',
-    creator:'rayen',
+    creator:'',
 
   });
   const [categories, setCategories] = useState<category[]>([]);
@@ -56,7 +57,6 @@ const CreateQuiz= () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -65,16 +65,26 @@ const CreateQuiz= () => {
       formDataToSend.append('difficultylevel', formData.difficultylevel); 
       formDataToSend.append('deadline', formData.deadline); 
       formDataToSend.append('creator', formData.creator); 
-
+  
       const response = await axios.post('http://localhost:3000/quiz/createQuiz', formData);
       console.log(response.data);
       navigate('/listquiz');
-      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+  
+      await Swal.fire({
+        title: "Quiz Created!",
+        text: "Quiz has been created successfully.",
+        icon: "success",
+      });
     } catch (error) {
       console.error('Error:', error);
-      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to create quiz. Please try again.",
+        icon: "error",
+      });
     }
   };
+  
 
 
     
@@ -108,6 +118,7 @@ const CreateQuiz= () => {
               name="quiztitle"
               value={formData.quiztitle}
               onChange={handleChange}
+              required
             />
             <label htmlFor="floatingInputGrid">Quiz Title</label>
           </div>
@@ -133,7 +144,7 @@ const CreateQuiz= () => {
           <div className="form-floating">
             <select className="form-select" id="floatingSelectPrivacy" defaultValue="Beginner" name="difficultylevel"
                     value={formData.difficultylevel}
-                    onChange={handleChange}>
+                    onChange={handleChange} required>
               <option className='d-none' value="">Select difficulty level</option>
               <option value="Beginner">Beginner</option>
               <option value="Intermidiate">Intermidiate</option>
@@ -155,6 +166,7 @@ const CreateQuiz= () => {
               name="noofinvitations"
               value={formData.noofinvitations}
               onChange={handleChange}
+              required
             />
             <label htmlFor="floatingProjectOverview">Invitations number</label>
           
@@ -172,7 +184,7 @@ const CreateQuiz= () => {
               name="noofquestions"
               value={formData.noofquestions}
               onChange={handleChange}
-              
+              required
             />
             <label htmlFor="floatingProjectOverview">Questions number</label>
           
@@ -188,6 +200,7 @@ const CreateQuiz= () => {
               name="material"
               value={formData.material}
               onChange={handleChange}
+              required
             />
             <label htmlFor="floatingInputBudget">Material</label>
           </div>
@@ -203,6 +216,7 @@ const CreateQuiz= () => {
                 name="duration"
               value={formData.duration}
               onChange={handleChange}
+              required
               />
               <label className="ps-6" htmlFor="floatingInputStartDate">
                 Duration
@@ -223,6 +237,7 @@ const CreateQuiz= () => {
                 name="deadline"
               value={formData.deadline}
               onChange={handleChange}
+              required
               />
               <label className="ps-6" htmlFor="floatingInputDeadline">
                 Deadline
@@ -231,38 +246,7 @@ const CreateQuiz= () => {
             </div>
           </div>
         </div>
-        {/* <div className="col-12 gy-6">
-          <div className="form-floating">
-            <input
-            type="file"
-              className="form-control"
-              id="floatingProjectOverview"
-              placeholder="Leave a comment here"
-              style={{ height: 100 }}
-              defaultValue={""}
-            />
-            <label htmlFor="floatingProjectOverview">project overview</label>
-          </div>
-        </div> */}
-       
-    
-        {/* <div className="col-12 gy-6">
-           <select
-            className="form-select"
-            id="organizerMultiple"
-            data-choices="data-choices"
-            data-options='{"removeItemButton":true,"placeholder":true}'
-          >
-            <option value="">Add tags</option>
-            <option>Stupidity</option>
-            <option>Jerry</option>
-            <option>Not_the_mouse</option>
-            <option>Rick</option>
-            <option>Biology</option>
-            <option>Neurology</option>
-            <option>Brainlessness</option>
-          </select>
-        </div> */}
+ 
         <div className="col-12 gy-6">
           <div className="row g-3 justify-content-end">
             <div className="col-auto">

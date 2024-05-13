@@ -54,18 +54,45 @@ const Quizes = () => {
     setFilteredQuizzes(filter);
   };
   const handleRemoveQuiz = async (idquiz: string) => {
-    try {
-      const response = await axios.delete(`http://localhost:3000/quiz/deleteQuiz/${idquiz}`);
-      if (response.status === 200) {
-        // Remove the category from the list
-        setQuizzes(quizzes.filter((quiz) => quiz.idquiz !== idquiz));
-        setFilteredQuizzes(filteredQuizzes.filter((quiz) => quiz.idquiz !== idquiz));
-        console.log('Quiz removed successfully!');
-      } else {
-        console.error('Error removing quiz');
+    // Afficher une alerte de confirmation
+    const confirmDelete = await Swal.fire({
+      title: `Are you sure?`,
+      text: `You won't be able to revert this!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    });
+  
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await axios.delete(`http://localhost:3000/quiz/deleteQuiz/${idquiz}`);
+        if (response.status === 200) {
+          // Supprimer le quiz de la liste
+          setQuizzes(quizzes.filter((quiz) => quiz.idquiz !== idquiz));
+          setFilteredQuizzes(filteredQuizzes.filter((quiz) => quiz.idquiz !== idquiz));
+          console.log('Quiz removed successfully!');
+  
+          // Afficher une alerte de succès
+          await Swal.fire({
+            title: "Deleted!",
+            text: "Quiz has been deleted.",
+            icon: "success",
+          });
+        } else {
+          console.error('Error removing quiz');
+        }
+      } catch (error) {
+        console.error('Unexpected error removing quiz:', error);
       }
-    } catch (error) {
-      console.error('Unexpected error removing quiz:', error);
+    } else if (confirmDelete.dismiss === Swal.DismissReason.cancel) {
+      // Afficher une alerte d'annulation
+      await Swal.fire({
+        title: "Cancelled",
+        text: `Quiz is safe :)`,
+        icon: "error",
+      });
     }
   };
 

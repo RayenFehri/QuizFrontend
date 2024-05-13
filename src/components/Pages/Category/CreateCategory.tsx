@@ -2,23 +2,20 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUserId } from '../../../Services/Auth/auth.service';
+import Swal from 'sweetalert2';
 
-const iduser = getCurrentUserId();
-console.log(iduser)
-
-const CreateCategory= () => {
+const CreateCategory = () => {
   const [formData, setFormData] = useState({
-    id:iduser,
+    id: getCurrentUserId(),
     categoryname: '',
-
   });
   const navigate = useNavigate();
   const [categories, setCategories] = useState<string[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,13 +29,20 @@ const CreateCategory= () => {
       setCategories([...categories, formData.categoryname]);
       setFormData({ ...formData, categoryname: '' });
       navigate('/listcategory');
-      // Gérer la réponse de votre backend ici, par exemple, afficher un message de succès à l'utilisateur
+      await Swal.fire({
+        title: "Category Created!",
+        text: "Category has been created successfully.",
+        icon: "success",
+      });
     } catch (error) {
       console.error('Error:', error);
-      // Gérer les erreurs ici, par exemple, afficher un message d'erreur à l'utilisateur
+      await Swal.fire({
+        title: "Error",
+        text: "Failed to create category. Please try again.",
+        icon: "error",
+      });
     }
   };
-
     return (
     <>
      
@@ -68,6 +72,7 @@ const CreateCategory= () => {
               placeholder="Project title"
               value={formData.categoryname}
               onChange={handleChange}
+              required
             />
             <label htmlFor="floatingInputGrid">Category name</label>
           </div>
