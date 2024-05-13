@@ -225,17 +225,7 @@ const QuestionQuiz = () => {
   return (
     <div className="content">
 
-      <nav className="mb-2" aria-label="breadcrumb">
-        <ol className="breadcrumb mb-0">
-          <li className="breadcrumb-item">
-            <a href="#!">Page 1</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="#!">Page 2</a>
-          </li>
-          <li className="breadcrumb-item active">Default</li>
-        </ol>
-      </nav>
+  
 
 
       <div className="col-auto">
@@ -243,8 +233,8 @@ const QuestionQuiz = () => {
 
           {/*------------------------------------Chat---------------------  */}
 
-          <div className="d-flex mb-3">
-            <div className="d-flex justify-content-end mb-3" style={{ marginRight: '50%' }}>
+          <div className="d-flex mb-3" style={{ marginRight: '25%' }}>
+            <div className="d-flex justify-content-end mb-3" >
               <button
                 className="btn "
                 type="button"
@@ -283,7 +273,7 @@ const QuestionQuiz = () => {
                     </button>
                   </div>
 
-                  <div className="chat d-flex phoenix-offcanvas-container pt-1 mt-n1 mb-9 ">
+                  <div className="chat d-flex phoenix-offcanvas-container pt-1 mt-n1 mb-50 ">
                     <div className="chat-content tab-content flex-1">
                       <div
                         className="tab-pane h-100 fade active show"
@@ -408,11 +398,7 @@ const QuestionQuiz = () => {
                         </div>
                       </div>
                     </div>
-                    <div
-                      className="phoenix-offcanvas-backdrop d-lg-none"
-                      data-phoenix-backdrop="data-phoenix-backdrop"
-                      style={{ top: 0 }}
-                    />
+                 
 
                   </div>
                 </div>
@@ -430,9 +416,7 @@ const QuestionQuiz = () => {
         <div className="row g-3 flex-between-end mb-5">
           <div className="col-auto">
             <h2 className="mb-2">Create Questions</h2>
-            <h5 className="text-body-tertiary fw-semibold">
-              Orders placed across your store
-            </h5>
+         
           </div>
           <div className="col-auto">
             <button
