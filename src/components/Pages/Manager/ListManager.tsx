@@ -177,12 +177,15 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                   </div>
                 </div>
                 <div className="col-auto scrollbar overflow-hidden-y flex-grow-1"></div>
+                {currentUser.authenticationData.user.user_metadata
+                            .role == 1 ? (
                 <div className="col-auto">
                   <a className="btn btn-primary px-5" href="/addManager">
                     <i className="fa-solid fa-plus me-2" />
                     Add Manager
                   </a>
                 </div>
+                   ) : null}
               </div>
             </div>
             <div className="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-body-emphasis border-top border-bottom border-translucent position-relative top-1">
@@ -320,7 +323,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                             </>
                           ) : null}
 
-                          <Link to={`/profile Manager/${user.id}`}>
+                          <Link to={`/profileManager/${user.id}`}>
                             <FontAwesomeIcon
                               icon={faEye}
                               style={{ color: "#fb983c" }}

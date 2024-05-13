@@ -16,7 +16,7 @@ import ProfileEmployee from './components/Pages/Employee/ProfileEmployee';
 import ProfileManager from './components/Pages/Manager/ProfileManager';
 import { ListEmployees } from './components/Pages/Employee/ListEmployees';
 import SendEmailComponent from './components/Email/SendEmail';
-import { AuthProvider } from './Services/Auth/AuthContext';
+import { AuthProvider, useAuth } from './Services/Auth/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import CreateCategory from './components/Pages/Category/CreateCategory';
 import { EditCategory } from './components/Pages/Category/EditCategory';
@@ -48,6 +48,8 @@ function App() {
 
 function AppContent() {
   const location = useLocation();
+  const { isAuthenticated } = useAuth(); // Assuming useAuth provides information about authentication status
+
   const excludedPaths = ['/login', '/profileEmployee/:id', '/profileManager'];
   const shouldDisplayHeaderAndNavbar = !excludedPaths.includes(location.pathname);
 
@@ -64,8 +66,7 @@ function AppContent() {
 
       <Routes>
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/" element={<PrivateRoute   />}> */}
-          <Route  path="/" element={<Home />} />
+        <Route  path="/" element={<Home />} />
           <Route path="/addEmployee" element={<AddEmployee />} />
           <Route path="/listEmployees" element={<ListEmployees />} />
           <Route path="/editEmployee/:id" element={<EditEmployee />} />
@@ -76,7 +77,7 @@ function AppContent() {
           <Route path="/editManager" element={<EditManager />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profileEmployee/:id" element={<ProfileEmployee />} />
-          <Route path="/profileManager" element={<ProfileManager />} />
+          <Route path="/profileManager/:id" element={<ProfileManager />} />
           {/* <Route path="/questionQuiz" element={<QuestionQuiz />} /> */}
           <Route path="/sendEmail" element={<SendEmailComponent />} />
           <Route path="/creategroup" element={<CreateGroup/>} />
@@ -97,7 +98,7 @@ function AppContent() {
 
 
 
-        {/* </Route> */}
+ 
       </Routes>
       <Footer />
     </>

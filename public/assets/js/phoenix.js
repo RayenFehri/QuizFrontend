@@ -1084,6 +1084,7 @@
     }),
       l && l.setAttribute("placeholder", "Type your message...");
   };
+  
 
   const choicesInit = () => {
     const { getData: e } = window.phoenix.utils;
@@ -4732,7 +4733,7 @@
           n.classList.add("show"),
             a || (document.body.style.overflow = "hidden");
         }),
-          d && 
+          d &&
             d.forEach((e) => {
               e.addEventListener("click", () => {
                 s(n);

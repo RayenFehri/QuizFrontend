@@ -163,6 +163,16 @@ const QuestionQuiz = () => {
   //   const addOption = () => {
   //     setOptions([...options, { content: "", iscorrect: false }]);
   //   };
+
+  const removeOption = (indexToRemove: number) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      answers: prevFormData.answers.filter((_, index) => index !== indexToRemove)
+    }));
+    setOptions((prevOptions) => prevOptions.filter((_, index) => index !== indexToRemove));
+  };
+
+
   const addOption = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -186,6 +196,7 @@ const QuestionQuiz = () => {
     setQuestions(newQuestions);
     setCurrentPage(newQuestions.length - 1);
   };
+
 
   const resetNewQuestion = () => {
     return {
@@ -233,35 +244,35 @@ const QuestionQuiz = () => {
           {/*------------------------------------Chat---------------------  */}
 
           <div className="d-flex mb-3">
-          <div className="d-flex justify-content-end mb-3" style={{ marginRight:'50%' }}>
-    <button
-        className="btn "
-        type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#sendChatModal"
-        aria-haspopup="true"
-        aria-expanded="false"
-        data-bs-reference="parent"
-    >
-        <img
-            className="rounded-circle"
-            src="../assets/img/ai-avatar.png"
-            alt=""
-            style={{ width: '60px', height: '60px' }} // Ajustez la taille de l'image selon vos besoins
-        />
-    </button>
-</div>
+            <div className="d-flex justify-content-end mb-3" style={{ marginRight: '50%' }}>
+              <button
+                className="btn "
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#sendChatModal"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-reference="parent"
+              >
+                <img
+                  className="rounded-circle"
+                  src="../assets/img/ai-avatar.png"
+                  alt=""
+                  style={{ width: '60px', height: '60px' }} // Ajustez la taille de l'image selon vos besoins
+                />
+              </button>
+            </div>
 
 
             <div className="modal fade" id="sendChatModal" tabIndex={-1}>
               <div className="modal-dialog modal-dialog-centered modal-lg">
                 <div className="modal-content border border-translucent">
                   <div className="modal-header border-translucent p-2">
-                    
+
                     <h5 className="modal-title text-body-highlight fs-6 lh-sm">
                       ChatBot
                     </h5>
-             
+
                     <button
                       className="btn p-1 text-danger"
                       type="button"
@@ -309,7 +320,7 @@ const QuestionQuiz = () => {
                           </div>
 
                           <div className="card-body p-3 p-sm-4 scrollbar">
-                            {aiMessages.map((message, index) => (
+                            {chatMessages.map((message, index) => (
                               <React.Fragment key={index}>
                                 {/* User message */}
                                 <div className="d-flex chat-message">
@@ -478,17 +489,17 @@ const QuestionQuiz = () => {
                         </div>
                       </div>
                       {options.map((option, optionIndex) => (
-                        <div
-                          key={optionIndex}
-                          className="col-12 col-sm-6 col-xl-12"
-                        >
+                        <div key={optionIndex} className="col-12 col-sm-6 col-xl-12">
                           <div className="d-flex flex-wrap mb-2">
                             <h5 className="text-body-highlight me-2">
                               Option {optionIndex + 1}
                             </h5>
-                            <a className="fw-bold fs-9" href="#!">
+                            <button
+                              className="btn btn-link fw-bold fs-9"
+                              onClick={() => removeOption(optionIndex)}
+                            >
                               Remove
-                            </a>
+                            </button>
                           </div>
                           <div className="mb-3">
                             <Form.Check
@@ -524,6 +535,7 @@ const QuestionQuiz = () => {
                           </div>
                         </div>
                       ))}
+
                       <button
                         className="btn btn-phoenix-primary w-100"
                         type="button"
@@ -550,17 +562,29 @@ const QuestionQuiz = () => {
             totalPages={Math.ceil(questions.length / questionsPerPage)}
             onPageChange={setCurrentPage}
           />
-          <button
-            className="btn btn-secondary"
-            type="submit"
-          >
+  <button
+    className="btn btn-secondary"
+    onClick={nextPage}
+    disabled={currentPage === Math.ceil(questions.length / questionsPerPage) - 1}
+  >
             Next
           </button>
         </div>
+   
+        <div className="d-flex justify-content-between">
+
+  <button className="btn btn-primary" type="submit">
+    Save
+  </button>
+  <div className="space"></div> {/* Classe personnalisée pour l'espace */}
+  <button className="btn btn-secondary me-2" type="button">
+    <a href="/listquiz" className="text-decoration-none text-white">Finish</a>
+  </button>
+</div>
+
       </form>
     </div>
   );
 };
-
 
 export default QuestionQuiz;

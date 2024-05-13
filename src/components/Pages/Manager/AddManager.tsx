@@ -17,7 +17,7 @@ const AddManager = () => {
     joiningdate: '',
     profilepicture: '',
     groupe: '',
-    role:3
+    role:2
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -56,7 +56,7 @@ const AddManager = () => {
       try {
         const formDataWithRole = {
           ...formData,
-          role: 3,
+          role: 2,
         };
         const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
         console.log(response.data);
@@ -138,7 +138,7 @@ const AddManager = () => {
         errors.address = value.trim() === '' ? 'Address is required' : '';
         break;
       case 'phone':
-        errors.phone = !/^\d{10}$/.test(value) ? 'Invalid phone number' : '';
+        errors.phone = !/^\d{8}$/.test(value) ? 'Invalid phone number' : '';
         break;
       case 'birthdate':
         errors.birthdate = value.trim() === '' ? 'Date of birth is required' : '';

@@ -17,7 +17,7 @@ const AddEmployee = () => {
     joiningdate: '',
     profilepicture: '',
     groupe: '',
-    role:3
+    role: 3
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -35,7 +35,7 @@ const AddEmployee = () => {
     joiningdate: '',
     groupe: ''
   });
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     if (e.target.type === 'file') {
       const inputElement = e.target as HTMLInputElement;
@@ -51,7 +51,7 @@ const AddEmployee = () => {
   };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     if (validateForm()) {
       try {
         const formDataWithRole = {
@@ -60,14 +60,14 @@ const AddEmployee = () => {
         };
         const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
         console.log(response.data);
-  
+
         // SweetAlert for successful submission
         Swal.fire({
           title: "Success!",
           text: "New employee added successfully!",
           icon: "success"
         });
-  
+
       } catch (error) {
         console.error('Error:', error);
       }
@@ -75,7 +75,7 @@ const AddEmployee = () => {
       console.error('Invalid form');
     }
   };
-  
+
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -90,7 +90,7 @@ const AddEmployee = () => {
     try {
       const response = await axios.get(
         "http://localhost:3000/group/getAllGroup"
-      ); 
+      );
       const groupsData: group[] = response.data.map((item: any) => ({
         idgroup: item.idgroup,
         groupname: item.groupname,
@@ -117,7 +117,7 @@ const AddEmployee = () => {
 
   const validateField = (fieldName: string, value: string) => {
     let errors: any = { ...formErrors };
-  
+
     switch (fieldName) {
       case 'firstname':
         errors.firstname = value.length < 3 ? 'First name must be at least 3 characters long' : '';
@@ -138,7 +138,7 @@ const AddEmployee = () => {
         errors.address = value.trim() === '' ? 'Address is required' : '';
         break;
       case 'phone':
-        errors.phone = !/^\d{10}$/.test(value) ? 'Invalid phone number' : '';
+        errors.phone = !/^\d{8}$/.test(value) ? 'Invalid phone number' : '';
         break;
       case 'birthdate':
         errors.birthdate = value.trim() === '' ? 'Date of birth is required' : '';
@@ -152,11 +152,11 @@ const AddEmployee = () => {
       default:
         break;
     }
-  
+
     setFormErrors(errors);
   };
-  
-  
+
+
   return (
     <>
       <div className="content">
@@ -267,7 +267,7 @@ const AddEmployee = () => {
                                   placeholder="John "
                                   id="bootstrap-wizard-wizard-name"
                                 />
-                                 {formErrors.firstname.length > 0 && (
+                                {formErrors.firstname.length > 0 && (
                                   <small className="text-danger">{formErrors.firstname}</small>
                                 )}
                               </div>
@@ -284,7 +284,7 @@ const AddEmployee = () => {
                                   placeholder="Smith"
                                   id="bootstrap-wizard-wizard-name"
                                 />
-                                 {formErrors.lastname.length > 0 && (
+                                {formErrors.lastname.length > 0 && (
                                   <small className="text-danger">{formErrors.lastname}</small>
                                 )}
                               </div>
@@ -351,13 +351,13 @@ const AddEmployee = () => {
                                     data-wizard-confirm-password="true"
                                     onChange={handleChange}
                                   />
-                                   {formErrors.confirmPassword.length > 0 && (
+                                  {formErrors.confirmPassword.length > 0 && (
                                     <small className="text-danger">{formErrors.confirmPassword}</small>
                                   )}
                                 </div>
                               </div>
                             </div>
-                       
+
 
 
                           </div>
@@ -366,7 +366,7 @@ const AddEmployee = () => {
                             role="tabpanel"
                             aria-labelledby="bootstrap-wizard-tab2"
                             id="bootstrap-wizard-tab2"
-                           >
+                          >
 
                             <div
                               className="row g-4 mb-4"
@@ -381,8 +381,8 @@ const AddEmployee = () => {
                                   name="profilepicture"
                                   onChange={handleChange}
                                 />
-                                
-                              
+
+
                               </div>
                               <div className="col-md-auto">
                                 <div className="dz-preview dz-preview-single">
@@ -439,7 +439,6 @@ const AddEmployee = () => {
                                 <option value="">Select your gender ...</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
-                                <option value="Other">Other</option>
                               </select>
                             </div>
                             <div className="mb-2">
@@ -458,9 +457,9 @@ const AddEmployee = () => {
                                 onChange={handleChange}
                                 id="bootstrap-wizard-wizard-phone"
                               />
-                                                {formErrors.phone.length > 0 && (
-                                  <small className="text-danger">{formErrors.phone}</small>
-                                )}
+                              {formErrors.phone.length > 0 && (
+                                <small className="text-danger">{formErrors.phone}</small>
+                              )}
                             </div>
                             <div className="mb-2">
                               <label
@@ -478,9 +477,9 @@ const AddEmployee = () => {
                                 placeholder="d/m/y"
                                 id="bootstrap-wizard-wizard-datepicker"
                               />
-                                                {formErrors.birthdate.length > 0 && (
-                                  <small className="text-danger">{formErrors.birthdate}</small>
-                                )}
+                              {formErrors.birthdate.length > 0 && (
+                                <small className="text-danger">{formErrors.birthdate}</small>
+                              )}
 
                             </div>
                             <div className="mb-2">
@@ -499,30 +498,30 @@ const AddEmployee = () => {
                                 placeholder="d/m/y"
                                 id="bootstrap-wizard-wizard-datepicker"
                               />
-                                                {formErrors.joiningdate.length > 0 && (
-                                  <small className="text-danger">{formErrors.joiningdate}</small>
-                                )}
+                              {formErrors.joiningdate.length > 0 && (
+                                <small className="text-danger">{formErrors.joiningdate}</small>
+                              )}
                             </div>
                             <div className="mb-2">
-  <label className="form-label" htmlFor="bootstrap-wizard-wizard-select-group">
-    Group Name
-  </label>
-  <select
-    className="form-select"
-    name="groupe"
-    value={formData.groupe}
-    onChange={handleChange}
-    id="bootstrap-wizard-wizard-select-group"
-  >
-    <option value="">Select Group</option>
-    {filteredGroups.map(group => (
-      <option key={group.idgroup} value={group.groupname}>{group.groupname}</option>
-    ))}
-  </select>
-  {formErrors.groupe.length > 0 && (
-                                  <small className="text-danger">{formErrors.groupe}</small>
-                                )}
-</div>
+                              <label className="form-label" htmlFor="bootstrap-wizard-wizard-select-group">
+                                Group Name
+                              </label>
+                              <select
+                                className="form-select"
+                                name="groupe"
+                                value={formData.groupe}
+                                onChange={handleChange}
+                                id="bootstrap-wizard-wizard-select-group"
+                              >
+                                <option value="">Select Group</option>
+                                {filteredGroups.map(group => (
+                                  <option key={group.idgroup} value={group.groupname}>{group.groupname}</option>
+                                ))}
+                              </select>
+                              {formErrors.groupe.length > 0 && (
+                                <small className="text-danger">{formErrors.groupe}</small>
+                              )}
+                            </div>
 
                             <div className="mb-2">
                               <label
@@ -540,9 +539,9 @@ const AddEmployee = () => {
                                 id="bootstrap-wizard-wizard-address"
 
                               />
-                                                {formErrors.address.length > 0 && (
-                                  <small className="text-danger">{formErrors.address}</small>
-                                )}
+                              {formErrors.address.length > 0 && (
+                                <small className="text-danger">{formErrors.address}</small>
+                              )}
                             </div>
                           </div>
                           <div
@@ -572,11 +571,11 @@ const AddEmployee = () => {
                                 <div className="text-center text-sm-start">
                                   <h5 className="mb-3"></h5>
                                   <p className="text-body-emphasis fs-9">
-                                    
+
                                     <br />
-                                    
+
                                   </p>
-                                
+
                                 </div>
                               </div>
                             </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Reports } from '../../../Types/Reports';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faBuilding, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 function ListReport() {
@@ -75,17 +75,7 @@ function ListReport() {
 
     return (
         <div className="content">
-            <nav className="mb-2" aria-label="breadcrumb">
-                <ol className="breadcrumb mb-0">
-                    <li className="breadcrumb-item">
-                        <a href="#!">Page 1</a>
-                    </li>
-                    <li className="breadcrumb-item">
-                        <a href="#!">Page 2</a>
-                    </li>
-                    <li className="breadcrumb-item active">Default</li>
-                </ol>
-            </nav>
+
             <div className="pb-8">
                 <h2 className="mb-4">Reports</h2>
                 <p>All({reports.length})</p>
@@ -97,14 +87,8 @@ function ListReport() {
                         <div className="col-12">
                             <div className="d-md-flex justify-content-between">
                                 <div className="mb-3">
-                                    <button className="btn btn-primary me-4">
-                                        <span className="fas fa-plus me-2" />
-                                        Create Report
-                                    </button>
-                                    <button className="btn btn-link text-body px-0">
-                                        <span className="fa-solid fa-file-export fs-9 me-2" />
-                                        Export{" "}
-                                    </button>
+                                  
+                             
                                 </div>
                             </div>
                         </div>
@@ -117,38 +101,34 @@ function ListReport() {
                                         <div className="card-body">
                                             <div className="border-bottom border-translucent">
                                                 <div className="d-flex align-items-start mb-1">
-                                                    <div className="form-check mb-0">
-                                                        <FontAwesomeIcon className='ms-4' icon={faBook} />
-                                                    </div>
-                                                    <div className="d-sm-flex align-items-center ps-2">
-                                                        <a
-                                                            className="fw-bold fs-7 lh-sm title line-clamp-1 me-sm-4"
-                                                            href="/reportDetail"
-                                                        >
-                                                            {report.quizName}
-                                                        </a>
-                                                        <div className="d-flex align-items-center">
-                                                            <span
-                                                                className="fa-solid fa-circle me-1 text-danger"
-                                                                data-fa-transform="shrink-6 up-1"
-                                                            />
-                                                            <span className="fw-bold fs-9 text-body lh-2">
-                                                                Urgent
-                                                            </span>
+
+                                                    <div className="d-flex align-items-start mb-1">
+
+                                                        <div className="d-sm-flex align-items-center ps-2">
+                                                            <a
+                                                                className="fw-bold fs-7 lh-sm title line-clamp-1 me-sm-4"
+                                                                href="/reportDetail"
+                                                            >
+                                                                {report.quizName}
+                                                            </a>
+
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <p className="fs-9 fw-semibold text-body ms-4 text mb-4 ps-2">
-                                                <Link to={`/reportDetail/${report.quizid}`} className="me-2">
-                                                  Consult report
-                                                   </Link>
-                                                </p>
+
                                             </div>
                                             <div className="row g-1 g-sm-3 mt-2 lh-1">
                                                 <div className="col-12 col-sm-auto flex-1 text-truncate">
                                                     <a className="fw-semibold fs-9" href="#!">
-                                                        <span className="fa-regular fa-folder me-2 reportsby" />
-                                                        Group Marketing
+
+                                                        <FontAwesomeIcon className='fa-regular fa-folder me-2 reportsby' icon={faBook} />
+
+
+
+                                                        <Link to={`/reportDetail/${report.quizid}`} className="me-2">
+                                                            Consult report
+                                                        </Link>
+
                                                     </a>
                                                 </div>
                                                 <div className="col-12 col-sm-auto">
@@ -159,7 +139,7 @@ function ListReport() {
                                                             style={{ strokeWidth: 2 }}
                                                         />
                                                         <p className="mb-0 fs-9 fw-semibold text-body-tertiary reports">
-                                                            
+
                                                         </p>
                                                     </div>
                                                 </div>
@@ -170,9 +150,7 @@ function ListReport() {
                                                             data-feather="clock"
                                                             style={{ strokeWidth: 2 }}
                                                         />
-                                                        <p className="mb-0 fs-9 fw-semibold text-body-tertiary date">
-                                                            Dec 30, 2022
-                                                        </p>
+
                                                     </div>
                                                 </div>
                                             </div>

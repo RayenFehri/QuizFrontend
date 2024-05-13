@@ -65,34 +65,15 @@ function ReportDetail() {
   };
   return (
 <div className="content">
-  <nav className="mb-2" aria-label="breadcrumb">
-    <ol className="breadcrumb mb-0">
-      <li className="breadcrumb-item">
-        <a href="#!">Page 1</a>
-      </li>
-      <li className="breadcrumb-item">
-        <a href="#!">Page 2</a>
-      </li>
-      <li className="breadcrumb-item active">Default</li>
-    </ol>
-  </nav>
+  
   <div className="pb-9">
     <h2 className="mb-4">{reports.length > 0 ? reports[0].quizName : "Quiz Name"}</h2> {/* Remplacez "Quiz Name" par le nom de votre quiz */}
     <div className="row g-3 justify-content-between mb-4">
       <div className="col-auto">
         <div className="d-flex flex-wrap gap-2">
-          <button className="btn btn-primary">
-            <span className="fas fa-envelope me-2" />
-            Send mail
-          </button>
-          <button className="btn btn-phoenix-primary">
-            <span className="fas fa-pencil me-2" />
-            Edit
-          </button>
-          <button className="btn btn-phoenix-secondary text-body">
-            <span className="fa-solid fa-file-export fs-9 me-2" />
-            Export
-          </button>
+
+      
+         
         </div>
       </div>
  
@@ -263,7 +244,7 @@ function ReportDetail() {
                     </td>
                     <td className="deal_owner align-middle white-space-nowrap fw-semibold text-body-emphasis ps-4 py-0">
                       
-                          {report.startingdate}
+                          {report.endingdate}
                        
                     </td>
                     <td className="account_name align-middle white-space-nowrap ps-4 fw-semibold text-body py-0">
@@ -277,36 +258,9 @@ function ReportDetail() {
                         data-feather="trending-down"
                         style={{ minHeight: 8, width: 14 }}
                       >
-                      <FeatherIcon icon="trending-up" />
   </span>
                     </td>
-                    <td className="align-middle white-space-nowrap text-end pe-0 ps-4">
-                      <div className="btn-reveal-trigger position-static">
-                        <button
-                          className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          data-boundary="window"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                          data-bs-reference="parent"
-                        >
-                          <span className="fas fa-ellipsis-h fs-10" />
-                        </button>
-                        <div className="dropdown-menu dropdown-menu-end py-2">
-                          <a className="dropdown-item" href="#!">
-                            View
-                          </a>
-                          <a className="dropdown-item" href="#!">
-                            Export
-                          </a>
-                          <div className="dropdown-divider" />
-                          <a className="dropdown-item text-danger" href="#!">
-                            Remove
-                          </a>
-                        </div>
-                      </div>
-                    </td>
+               
                   </tr>
            
                )}
