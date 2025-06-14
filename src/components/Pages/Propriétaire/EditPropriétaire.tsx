@@ -9,7 +9,7 @@ import { group } from '../../../Types/Group';
 import Swal from 'sweetalert2';
 
 
-export function EditManager() {
+export function EditOwner() {
   const startDateRef = useRef<HTMLInputElement>(null); // Référence au champ de date
   const { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
@@ -92,7 +92,6 @@ export function EditManager() {
       text: "Please fill in all the required fields.",
       icon: "error"
     });
-    
     return;
   }
 
@@ -133,7 +132,7 @@ export function EditManager() {
         text: "User updated successfully!",
         icon: "success"
       });
-      navigate('/listManagers');
+      navigate('/listOwner')
     } else {
       Swal.fire({
         title: "Error!",
@@ -158,7 +157,7 @@ export function EditManager() {
   return (
     <>
       <div className="content">
-        <h2 className="mb-2 lh-sm">Edit Manager</h2>
+        <h2 className="mb-2 lh-sm">Edit Owner</h2>
 
         <div className="mt-4">
           <div className="row g-4">

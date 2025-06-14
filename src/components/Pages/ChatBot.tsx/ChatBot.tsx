@@ -88,11 +88,18 @@ const ChatBot = () => {
                             <span className="fa-solid fa-chevron-left" />
                             </button>
                             <div className="d-flex flex-column flex-md-row align-items-md-center">
+                            <img
+                  className="rounded-circle"
+                  src="../assets/img/ai-avatar.png"
+                  alt=""
+                  style={{ width: '40px', height: '40px' }} // Ajustez la taille de l'image selon vos besoins
+                />
                             <button
                                 className="btn fs-7 fw-semibold text-body-emphasis d-flex align-items-center p-0 me-3 text-start"
                                 data-phoenix-toggle="offcanvas"
                                 data-phoenix-target="#thread-details-0"
                             >
+                      
                                 <span className="line-clamp-1">Quizo Bot</span>
                             </button>
                             <p className="fs-9 mb-0 me-2">

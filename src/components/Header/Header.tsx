@@ -123,7 +123,7 @@ const Header = () => {
           <div className="avatar avatar-l ">
             <img
               className="rounded-circle "
-              src="assets/img/team/40x40/57.webp"
+              src="assets/img/favicons/UserAvatar.png"
               alt=""
             />
           </div>
@@ -138,7 +138,7 @@ const Header = () => {
                 <div className="avatar avatar-xl ">
                   <img
                     className="rounded-circle "
-                    src={"assets/img/team/72x72/57.webp"}
+                    src={"assets/img/favicons/UserAvatar.png"}
                     alt=""
                   />
                 </div>

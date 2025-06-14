@@ -6,7 +6,7 @@ import { group } from '../../../Types/Group';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-const AddManager = () => {
+const AddOwner = () => {
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -21,6 +21,7 @@ const AddManager = () => {
     role:2
   });
   const navigate = useNavigate();
+
   const [currentStep, setCurrentStep] = useState(1);
   const [groups, setGroups] = useState<group[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<group[]>([]);
@@ -57,7 +58,7 @@ const AddManager = () => {
       try {
         const formDataWithRole = {
           ...formData,
-          role: 2,
+          role: 1,
         };
         const response = await axios.post('http://localhost:3000/user/createUserProfile', formDataWithRole);
         console.log(response.data);
@@ -65,10 +66,10 @@ const AddManager = () => {
         // SweetAlert for successful submission
         Swal.fire({
           title: "Success!",
-          text: "New manager added successfully!",
+          text: "New Owner added successfully!",
           icon: "success"
         });
-        navigate('/listManagers');
+        navigate('/listOwner')
   
       } catch (error) {
         console.error('Error:', error);
@@ -162,7 +163,7 @@ const AddManager = () => {
   return (
     <>
       <div className="content">
-        <h2 className="mb-2 lh-sm">Create new Manager</h2>
+        <h2 className="mb-2 lh-sm">Create new Owner</h2>
         <div className="row mb-9">
           <div className="col-12 col-xxl-17">
             <div
@@ -637,4 +638,4 @@ const AddManager = () => {
   )
 }
 
-export default AddManager;
+export default AddOwner;

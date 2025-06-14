@@ -43,6 +43,8 @@ function Navbar() {
           {/* scrollbar removed*/}
           <div className="navbar-vertical-content">
             <ul className="navbar-nav flex-column" id="navbarVerticalNav">
+            {(currentUser.authenticationData.user.user_metadata.role == 1 || currentUser.authenticationData.user.user_metadata .role ==2 )? (
+
               <li className="nav-item">
                 <div className="nav-item-wrapper">
                   <a
@@ -64,6 +66,76 @@ function Navbar() {
                   </a>
                 </div>
               </li>
+             ) : null}
+
+              {/* ----------------------------------- SUPER ADMIN ------------------------------------*/}
+
+              {currentUser.authenticationData.user.user_metadata
+                            .role == 0 ? (
+              <li className="nav-item">
+              <div className="nav-item-wrapper">
+                  <a
+                    className="nav-link dropdown-indicator label-1"
+                    href="#nv-CRM"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    aria-expanded="false"
+                    aria-controls="nv-CRM"
+                  >
+                    <div className="d-flex align-items-center">
+                      <div className="dropdown-indicator-icon">
+                        <span className="fas fa-caret-right" />
+                      </div>
+                      <span className="nav-link-icon">
+
+                        <FontAwesomeIcon icon={faUserTie} />
+
+                      </span>
+                      <span className="nav-link-text">Owner</span>
+                      <span
+                        className="fa-solid fa-circle text-info ms-1 new-page-indicator"
+                        style={{ fontSize: 6 }}
+                      />
+                    </div>
+                  </a>
+                  <div className="parent-wrapper label-1">
+                    <ul className="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-CRM" >
+                      <li className="collapsed-nav-item-title d-none">Owner</li>
+
+                      {/* {isAuthenticated && ( */}
+                      
+                      <li className="nav-item">
+                        <a className="nav-link" href="/addOwner" data-bs-toggle="" aria-expanded="false" >
+                          <div className="d-flex align-items-center">
+                            <FontAwesomeIcon icon={faUserPlus} />
+                            <span className="nav-link-text">Create New Owner</span>
+                          </div>
+                        </a>
+                      </li>
+                      {/* )} */}
+
+                      {/* {isAuthenticated && ( */}
+                      <li className="nav-item">
+                        <a className="nav-link" href="/listOwner" data-bs-toggle="" aria-expanded="false" >
+                          <div className="d-flex align-items-center">
+                            <FontAwesomeIcon icon={faUsers} />
+                            <span className="nav-link-text">List Owner</span>
+                            <span className="badge ms-2 badge badge-phoenix badge-phoenix-info ">
+                              New
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      {/* )} */}
+
+                    </ul>
+                  </div>
+                </div>
+              </li>
+                     ) : null}
+
+               {/* ----------------------------------- SUPER ADMIN ------------------------------------*/}
+               {(currentUser.authenticationData.user.user_metadata.role == 1 || currentUser.authenticationData.user.user_metadata .role ==2 )? (
               <li className="nav-item">
                 {/* label*/}
                 <p className="navbar-vertical-label">PAGES</p>
@@ -438,7 +510,7 @@ function Navbar() {
                   </a>
                 </div>
               </li>
-
+                 ) : null}
             </ul>
           </div>
         </div>

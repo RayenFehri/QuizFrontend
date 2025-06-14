@@ -136,15 +136,7 @@ const addOption = () => {
   return (
     <div className="content">
       <nav className="mb-2" aria-label="breadcrumb">
-        <ol className="breadcrumb mb-0">
-          <li className="breadcrumb-item">
-            <a href="#!">Page 1</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="#!">Page 2</a>
-          </li>
-          <li className="breadcrumb-item active">Default</li>
-        </ol>
+       
       </nav>
       <form className="mb-9" onSubmit={handleSubmit}>
         <div className="row g-3 flex-between-end mb-5">
@@ -641,15 +633,7 @@ export default Question_Quiz;
 //   return (
 //     <div className="content">
 //       <nav className="mb-2" aria-label="breadcrumb">
-//         <ol className="breadcrumb mb-0">
-//           <li className="breadcrumb-item">
-//             <a href="#!">Page 1</a>
-//           </li>
-//           <li className="breadcrumb-item">
-//             <a href="#!">Page 2</a>
-//           </li>
-//           <li className="breadcrumb-item active">Default</li>
-//         </ol>
+//         
 //       </nav>
 //       <form className="mb-9">
 //         <div className="row g-3 flex-between-end mb-5">

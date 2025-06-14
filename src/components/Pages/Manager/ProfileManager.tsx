@@ -53,17 +53,7 @@ const ProfileManager = () => {
       <section className="  pt-2 pb-6" >
         <div className="container-small">
           <nav className="mb-5" aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0">
-              <li className="breadcrumb-item">
-                <a href="/">Page 1</a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href="/listEmployees">Page 2</a>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Default
-              </li>
-            </ol>
+            
           </nav>
       
           <div className="row g-3 mb-6">

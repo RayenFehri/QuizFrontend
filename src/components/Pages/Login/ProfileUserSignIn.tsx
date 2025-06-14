@@ -87,17 +87,7 @@ function ProfileUserSignIn() {
       <section className="  pt-20 pb-9">
         <div className="container-small">
           <nav className="mb-5" aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0">
-              <li className="breadcrumb-item">
-                <a href="/">Page 1</a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href="/listEmployees">Page 2</a>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Default
-              </li>
-            </ol>
+            
           </nav>
           <div className="row align-items-center justify-content-between g-3 mb-4">
             <div className="col-auto">

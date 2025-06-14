@@ -33,6 +33,10 @@ import ProfileUserSignIn from './components/Pages/Login/ProfileUserSignIn';
 import SendQuizComponent from './components/Email/SendQuiz';
 import ListGroup from './components/Pages/Group/ListGroup';
 import QuestionQuiz from './components/Pages/QuestionsQuiz/QuestionQuiz';
+import AddOwner from './components/Pages/Propriétaire/AddPropriétaire';
+import { ListOwner } from './components/Pages/Propriétaire/ListPropriétaire';
+import { EditOwner } from './components/Pages/Propriétaire/EditPropriétaire';
+import ProfileOwner from './components/Pages/Propriétaire/ProfilePropriétaire';
 
 function App() {
   return (
@@ -67,13 +71,16 @@ function AppContent() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route  path="/" element={<Home />} />
+        <Route path="/addOwner" element={<AddOwner />} />
+          <Route path="/listOwner" element={<ListOwner onTotalManagersChange={function (total: number): void { throw new Error('Function not implemented.'); } } />} />
+          <Route path="/editOwner/:id" element={<EditOwner />} />
+          <Route path="/profileOwner/:id" element={<ProfileOwner />} />
+
           <Route path="/addEmployee" element={<AddEmployee />} />
           <Route path="/listEmployees" element={<ListEmployees />} />
           <Route path="/editEmployee/:id" element={<EditEmployee />} />
           <Route path="/addManager" element={<AddManager />} />
-          <Route path="/listManagers" element={<ListManager onTotalManagersChange={function (total: number): void {
-          throw new Error('Function not implemented.');
-        } } />} />
+          <Route path="/listManagers" element={<ListManager onTotalManagersChange={function (total: number): void {  throw new Error('Function not implemented.'); } } />} />
           <Route path="/editManager/:id" element={<EditManager />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profileEmployee/:id" element={<ProfileEmployee />} />

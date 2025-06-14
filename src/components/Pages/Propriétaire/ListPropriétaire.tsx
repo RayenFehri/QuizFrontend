@@ -28,7 +28,7 @@ interface Props {
   onTotalManagersChange: (total: number) => void; // Fonction de rappel pour mettre à jour le nombre total de managers
 }
 
-export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
+export const ListOwner: React.FC<Props> = ({ onTotalManagersChange }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const currentUser = getCurrentUser();
@@ -40,7 +40,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
       .then((data: any[]) => {
         console.log("Données utilisateurs reçues :", data);
         const usersData = data
-          .filter((user) => user.user.user_metadata.role == 2) // Filtrer les utilisateurs ayant le rôle 3
+          .filter((user) => user.user.user_metadata.role == 1)
           .map((item) => ({
             id: item.user.id,
             email: item.user.email,
@@ -131,7 +131,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
         <div className="mb-9">
           <div className="row g-2 mb-4">
             <div className="col-auto">
-              <h2 className="mb-0">Managers</h2>
+              <h2 className="mb-0">Owners List</h2>
             </div>
           </div>
           <ul className="nav nav-links mb-3 mb-lg-2 mx-n3">
@@ -170,11 +170,11 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                 </div>
                 <div className="col-auto scrollbar overflow-hidden-y flex-grow-1"></div>
                 {currentUser.authenticationData.user.user_metadata
-                            .role == 1 ? (
+                            .role == 0 ? (
                 <div className="col-auto">
-                  <a className="btn btn-primary px-5" href="/addManager">
+                  <a className="btn btn-primary px-5" href="/addOwner">
                     <i className="fa-solid fa-plus me-2" />
-                    Add Manager
+                    Add Owner
                   </a>
                 </div>
                    ) : null}
@@ -191,7 +191,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                         data-sort="last-order"
                         style={{ width: "20%" }}
                       >
-                        MANAGER
+                        Owner
                       </th>
                       <th
                         className="sort align-middle ps-12"
@@ -209,14 +209,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                       >
                         PHONE
                       </th>
-                      <th
-                        className="sort align-middle ps-5"
-                        scope="col"
-                        data-sort="last-order"
-                        style={{ width: "10%" }}
-                      >
-                        GROUP
-                      </th>
+                     
                       <th
                         className="sort align-middle ps-4"
                         scope="col"
@@ -259,7 +252,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                       >
                         <td className="align-middle white-space-nowrap assigness ps-1 py-4">
                         <Link
-                            to={`/listManager/`}
+                            to={`/listOwner/`}
                             className="fw-bold fs-9"
                           >
                             {user.profile.firstname} {user.profile.lastname}
@@ -276,9 +269,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                         <td className="align-middle white-space assigness ps-2 py-4 ">
                           {user.phone}
                         </td>
-                        <td className="align-middle white-space-nowrap assigness ps-5 py-4">
-                          {user.profile.groupe}
-                        </td>
+                      
                         <td className="align-middle white-space assigness">
                           {user.profile.address}
                         </td>
@@ -291,10 +282,10 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                         </td>
                         <td className="align-middle white-space-nowrap assigness ps-5 py-4">
                           {currentUser.authenticationData.user.user_metadata
-                            .role == 1 ? (
+                            .role == 0 ? (
                             <>
                               <Link
-                                to={`/editManager/${user.id}`}
+                                to={`/editOwner/${user.id}`}
                                 className="me-2"
                               >
                                 <FontAwesomeIcon
@@ -315,7 +306,7 @@ export const ListManager: React.FC<Props> = ({ onTotalManagersChange }) => {
                             </>
                           ) : null}
 
-                          <Link to={`/profileManager/${user.id}`}>
+                          <Link to={`/profileOwner/${user.id}`}>
                             <FontAwesomeIcon
                               icon={faEye}
                               style={{ color: "#fb983c" }}

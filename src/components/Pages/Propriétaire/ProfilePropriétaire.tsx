@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { User } from '../../../Types/User.type';
 
-const ProfileEmployee = () => {
+const ProfileOwner = () => {
   let { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [firstName, setFirstName] = useState<string>('');
@@ -154,4 +154,4 @@ const ProfileEmployee = () => {
   )
 }
 
-export default ProfileEmployee;
+export default ProfileOwner;

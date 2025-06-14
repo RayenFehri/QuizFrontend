@@ -94,15 +94,7 @@ const CreateQuiz= () => {
      
     <div className="content col-md-8 ">
   <nav className="mb-2 " aria-label="breadcrumb">
-    <ol className="breadcrumb mb-0">
-      <li className="breadcrumb-item">
-        <a href="#!">Page 1</a>
-      </li>
-      <li className="breadcrumb-item">
-        <a href="#!">Page 2</a>
-      </li>
-      <li className="breadcrumb-item active">Default</li>
-    </ol>
+  
   </nav>
   <h2 className="mb-4">Create new Quiz</h2>
   <div className="row">

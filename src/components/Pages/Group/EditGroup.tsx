@@ -1,16 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { group } from "../../../Types/Group";
 import Swal from 'sweetalert2';
+import { User } from "../../../Types/User.type";
+import axios from "axios";
 
 const EditGroup= () => {
   const { idgroup } = useParams();
   const [groupData, setGroupData] = useState<group | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
   const [groupName, setGroupName] = useState<string>('');
   const [groupLocation, setGroupLocation] = useState<string>('');
-  const [groupHead, setGroupHead] = useState<string>('Testeur');
+  
+  const [formData, setFormData] = useState({
+    groupname: "",
+    grouplocation: "",
+    grouphead: "",
+  });
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/user");
+      const userData = response.data.filter((user: any) => user.user.user_metadata.role === 2)
+        .map((item: any) => ({
+          id: item.user.id,
+          email: item.user.email,
+          phone: item.user.phone,
+          profile: item.profile,
+        }));
+      setUsers(userData);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des utilisateurs:", error);
+    }
+  };
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   const navigate = useNavigate();
   useEffect(() => {
     fetch(`http://localhost:3000/group/getOneGroup/${idgroup}`)
@@ -20,7 +52,7 @@ const EditGroup= () => {
         setGroupData(data);
         if (data) {
           setGroupName(data.groupname);
-          setGroupHead(data.grouphead);
+          setFormData(data.grouphead);
           setGroupLocation(data.grouplocation);
           
         }
@@ -42,7 +74,7 @@ const EditGroup= () => {
         body: JSON.stringify({
           groupname: groupName, 
           grouplocation: groupLocation,
-          grouphead: groupHead,
+          grouphead: formData.grouphead,
         }),
       });
 
@@ -78,15 +110,7 @@ const EditGroup= () => {
      
      <div className="content">
   <nav className="mb-2 " aria-label="breadcrumb">
-    <ol className="breadcrumb mb-0">
-      <li className="breadcrumb-item">
-        <a href="#!">Page 1</a>
-      </li>
-      <li className="breadcrumb-item">
-        <a href="#!">Page 2</a>
-      </li>
-      <li className="breadcrumb-item active">Default</li>
-    </ol>
+    
   </nav>
   <h2 className="mb-4">Edit Group</h2>
   <div className="row">
@@ -109,12 +133,21 @@ const EditGroup= () => {
       
         <div className="col-sm-6 col-md-4">
           <div className="form-floating">
-            <select className="form-select" id="floatingSelectTask">
-            
-              <option value={1}>Manager 1</option>
-              <option value={2}>Manager 2</option>
-              <option value={3}>Manager 3</option>
-            </select>
+          <select
+                    className="form-select"
+                    id="floatingSelectTask"
+                    name="grouphead"
+                    value={formData.grouphead}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select Group Head</option>
+                    {users.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.profile.firstname} {user.profile.lastname}
+                      </option>
+                    ))}
+                  </select>
             <label htmlFor="floatingSelectTask">Group Head</label>
           </div>
         </div>

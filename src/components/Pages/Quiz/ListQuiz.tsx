@@ -226,15 +226,7 @@ const Quizes = () => {
         <div className="">
           {/* ----------------------- Little Navbar (page1 page2 default)-----------------*- */}
           <nav className="mb-2" aria-label="breadcrumb ">
-            <ol className="breadcrumb mb-0">
-              <li className="breadcrumb-item">
-                <a href="#!">Page 1</a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href="#!">Page 2</a>
-              </li>
-              <li className="breadcrumb-item active">Default</li>
-            </ol>
+        
           </nav>
           {/* ----------------------- List of all quizes ------------------------------------- */}
           <div className="mb-9 ">
@@ -368,6 +360,7 @@ const Quizes = () => {
                     </div>
                   </div>
 
+                
 
                 </div>
               </div>

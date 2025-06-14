@@ -228,50 +228,19 @@ const QuestionQuiz = () => {
   
 
 
-      <div className="col-auto">
+      <div className="col-auto" >
         <div className="d-flex flex-wrap gap-2">
 
           {/*------------------------------------Chat---------------------  */}
 
-          <div className="d-flex mb-3" style={{ marginRight: '25%' }}>
-            <div className="d-flex justify-content-end mb-3" >
-              <button
-                className="btn "
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#sendChatModal"
-                aria-haspopup="true"
-                aria-expanded="false"
-                data-bs-reference="parent"
-              >
-                <img
-                  className="rounded-circle"
-                  src="../assets/img/ai-avatar.png"
-                  alt=""
-                  style={{ width: '60px', height: '60px' }} // Ajustez la taille de l'image selon vos besoins
-                />
-              </button>
-            </div>
+          <div className="d-flex mt-0" style={{ marginRight: '25%' }}>
+           
 
 
             <div className="modal fade" id="sendChatModal" tabIndex={-1}>
               <div className="modal-dialog modal-dialog-centered modal-lg">
                 <div className="modal-content border border-translucent">
-                  <div className="modal-header border-translucent p-2">
-
-                    <h5 className="modal-title text-body-highlight fs-6 lh-sm">
-                      ChatBot
-                    </h5>
-
-                    <button
-                      className="btn p-1 text-danger"
-                      type="button"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span className="fas fa-times fs-9"> </span>
-                    </button>
-                  </div>
+                  
 
                   <div className="chat d-flex phoenix-offcanvas-container pt-1 mt-n1 mb-50 ">
                     <div className="chat-content tab-content flex-1">
@@ -292,6 +261,12 @@ const QuestionQuiz = () => {
                                 <span className="fa-solid fa-chevron-left" />
                               </button>
                               <div className="d-flex flex-column flex-md-row align-items-md-center">
+                              <img
+                  className="rounded-circle"
+                  src="../assets/img/ai-avatar.png"
+                  alt=""
+                  style={{ width: '40px', height: '40px' }} // Ajustez la taille de l'image selon vos besoins
+                />
                                 <button
                                   className="btn fs-7 fw-semibold text-body-emphasis d-flex align-items-center p-0 me-3 text-start"
                                   data-phoenix-toggle="offcanvas"
@@ -305,8 +280,16 @@ const QuestionQuiz = () => {
                                   Active now
                                 </p>
                               </div>
+                              
                             </div>
-
+                            <button
+                      className="btn p-1 text-danger"
+                      type="button"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span className="fas fa-times fs-9"> </span>
+                    </button>
                           </div>
 
                           <div className="card-body p-3 p-sm-4 scrollbar">
@@ -375,8 +358,8 @@ const QuestionQuiz = () => {
                                     name='questionType'
                                     value={formDataChat.questionType}
                                     onChange={handleChangeChat}>
-                                    <option selected value="pdf">pdf</option>
-                                    <option value="general">general</option>
+                                    <option  value="pdf">pdf</option>
+                                    <option selected value="general">general</option>
                                   </select>
                                   <label htmlFor="floatingSelectAssignees">Select Question Type</label>
                                 </div>
@@ -406,7 +389,12 @@ const QuestionQuiz = () => {
             </div>
           </div>
           {/* ----------------------------------End Chat---------------------- */}
-
+          {/* <br />
+          <div className="col-auto ">
+                    <input className="d-flex mb-3" type="file" />
+                    
+                    
+        </div> */}
 
 
 
@@ -415,10 +403,28 @@ const QuestionQuiz = () => {
       <form className="mb-9" onSubmit={handleSubmit}>
         <div className="row g-3 flex-between-end mb-5">
           <div className="col-auto">
-            <h2 className="mb-2">Create Questions</h2>
+            
+            <h2 className="mb-5">Create Questions</h2>
          
           </div>
+          
           <div className="col-auto">
+              <button
+                className="btn"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#sendChatModal"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-reference="parent"
+              >
+                <img
+                  className="rounded-circle"
+                  src="../assets/img/ai-avatar.png"
+                  alt=""
+                  style={{ width: '50px', height: '50px' }} // Ajustez la taille de l'image selon vos besoins
+                />
+              </button>
             <button
               className="btn btn-primary mb-2 mb-sm-0"
               type="button"
@@ -426,6 +432,7 @@ const QuestionQuiz = () => {
             >
               Add Question
             </button>
+            
           </div>
         </div>
         <div className="row g-5">

@@ -17,7 +17,6 @@ const AddEmployee = () => {
     joiningdate: '',
     profilepicture: '',
     groupe: '',
-    role: 3
   });
 
   const [currentStep, setCurrentStep] = useState(1);
